@@ -396,8 +396,42 @@
 
     setInterval(updateClockAndCountdown, 1000);
 
-    // 3. إدارة التخزين
-    let appData = JSON.parse(localStorage.getItem('my_life_tracker_v9')) || {
+        // 3. إدارة التخزين الذكية (استرجاع كل البيانات القديمة تلقائياً)
+    const oldKeys = ['my_life_tracker_v9', 'my_life_tracker_v8', 'my_life_tracker_v7', 'my_life_tracker_v6', 'my_life_tracker_v5', 'my_life_tracker_v4', 'my_life_tracker_v3'];
+    let loadedData = null;
+
+    for (let k of oldKeys) {
+      const saved = localStorage.getItem(k);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (!loadedData) {
+            loadedData = parsed;
+          } else {
+            // دمج المهام والمالية من أي نسخة سابقة
+            if (parsed.tasks && parsed.tasks.length) {
+              parsed.tasks.forEach(ot => {
+                if (!loadedData.tasks.some(t => t.id === ot.id || t.text === ot.text)) {
+                  loadedData.tasks.push(ot);
+                }
+              });
+            }
+            if (parsed.finances && parsed.finances.length) {
+              parsed.finances.forEach(of => {
+                if (!loadedData.finances.some(f => f.date === of.date && f.amount === of.amount)) {
+                  loadedData.finances.push(of);
+                }
+              });
+            }
+            if (parsed.prayersHistory) {
+              loadedData.prayersHistory = { ...parsed.prayersHistory, ...loadedData.prayersHistory };
+            }
+          }
+        } catch(e) {}
+      }
+    }
+
+    let appData = loadedData || {
       lastActiveDate: todayDateStr,
       prayersHistory: {},
       extrasHistory: {},
@@ -408,6 +442,12 @@
       tasks: [],
       azkar: {}
     };
+
+    // تثبيت مفتاح موحد دائم للأبد
+    function save() {
+      localStorage.setItem('my_life_tracker_master', JSON.stringify(appData));
+    }
+
 
     // إعادة ضبط الأذكار إذا بدأ يوم جديد
     if (appData.lastActiveDate !== todayDateStr) {
