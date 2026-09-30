@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مساعدي اليومي الشامل</title>
+  <title>مساعدي اليومي</title>
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%22%2C%22short_name%22%3A%22%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b1120%22%2C%22theme_color%22%3A%22%230b1120%22%7D">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Tahoma, Arial, sans-serif; }
     body { background-color: #0b1120; color: #f8fafc; display: flex; justify-content: center; padding: 12px; min-height: 100vh; }
@@ -238,7 +242,7 @@
           </div>
           <div style="text-align: left;">
             <span style="font-size: 10px; opacity: 0.85; display: block;">سعر الصرف ($):</span>
-            <input type="number" id="usdExchangeRate" onchange="updateExchangeRate(this.value)" placeholder="15000" style="width: 90px; margin: 0; padding: 4px 8px; font-size: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); text-align: center;">
+            <input type="number" id="usdExchangeRate" oninput="updateExchangeRate(this.value)" placeholder="15000" style="width: 95px; margin: 0; padding: 4px 8px; font-size: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); text-align: center; color: #fff; font-weight: bold;">
           </div>
         </div>
 
@@ -291,7 +295,7 @@
           <button type="submit" class="btn-submit">+ تسجيل الحركة المالية</button>
         </form>
 
-        <!-- رسم بياني لصعود وهبوط المصاريف هذا الشهر -->
+        <!-- رسم بياني لمصاريف الشهر -->
         <div class="chart-container">
           <div class="chart-title">📈 حركة المصاريف اليومية (خلال الشهر)</div>
           <svg id="financeChartSvg" viewBox="0 0 300 90"></svg>
@@ -305,10 +309,10 @@
       </div>
     </div>
 
-    <!-- زر التصدير والتنبيهات -->
-    <div style="display:flex; justify-content:center; gap:8px; margin-top:14px;">
+    <!-- أزرار التصدير والتنبيهات والنسخ الاحتياطي -->
+    <div style="display:flex; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap;">
       <button onclick="requestNotificationPermission()" class="btn-action" style="background:#1e293b; border:1px solid #334155; padding:8px 14px; border-radius:10px;">
-        🔔 تفعيل تنبيهات الشاشة
+        🔔 تفعيل التنبيهات
       </button>
       <button onclick="openExportModal()" style="background:#10b981; border:none; color:#fff; padding:10px 18px; border-radius:10px; font-weight:bold; cursor:pointer;">
         📊 تصدير Excel مخصص
@@ -345,6 +349,26 @@
   </div>
 
   <script>
+    // --- محرك العمل بدون إنترنت (Offline Service Worker via Blob) ---
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      const swCode = `
+        const CACHE_NAME = 'daily-tracker-v1';
+        self.addEventListener('install', (e) => {
+          self.skipWaiting();
+        });
+        self.addEventListener('activate', (e) => {
+          e.waitUntil(clients.claim());
+        });
+        self.addEventListener('fetch', (e) => {
+          e.respondWith(
+            fetch(e.request).catch(() => caches.match(e.request))
+          );
+        });
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    }
+
     // 1. مواقيت دمشق المعتمدة
     const damascusTimes = {
       fajr: { name: 'الفجر', h: 5, m: 6, display: '05:06 ص' },
@@ -400,7 +424,6 @@
       document.getElementById('nextPrayerName').innerText = nextP;
       document.getElementById('nextPrayerTimer').innerText = `${diffH} س و ${diffMin} د`;
 
-      // فحص تنبيهات المهام والصلوات كل دقيقة
       if (now.getSeconds() === 0) {
         checkAutomatedNotifications(now, curM, pOrder);
       }
@@ -408,7 +431,7 @@
 
     setInterval(updateClockAndCountdown, 1000);
 
-    // 3. التخزين
+    // 3. إدارة التخزين
     let appData = JSON.parse(localStorage.getItem('my_life_tracker_v8')) || {
       prayersHistory: {},
       extrasHistory: {},
@@ -509,13 +532,11 @@
       save();
     }
 
-    // رسم بياني لمعدل الالتزام بالصلوات آخر 30 يوماً
     function renderPrayerChart() {
       const svg = document.getElementById('prayerChartSvg');
       svg.innerHTML = '';
       
       let totalPrayed = 0;
-      let totalPossible = 30 * 5;
       const bars = [];
 
       for (let i = 29; i >= 0; i--) {
@@ -529,7 +550,7 @@
         bars.push(dayCount);
       }
 
-      const rate = Math.round((totalPrayed / totalPossible) * 100);
+      const rate = Math.round((totalPrayed / 150) * 100);
       document.getElementById('prayerCommitRate').innerText = `${rate}%`;
 
       const barWidth = 7;
@@ -587,7 +608,7 @@
       if (cur > 0) { appData.azkar[id] = cur - 1; save(); renderAzkar(); }
     }
 
-    // 6. المهام (مع الفرز التلقائي لليوم ثم غداً ثم الأبعد + التأجيل الذكي + الإشعار)
+    // 6. المهام
     function toggleCustomDate(v) {
       const el = document.getElementById('taskCustomDate');
       if (v === 'custom') { el.classList.remove('hidden'); el.value = todayDateStr; el.required = true; }
@@ -610,7 +631,6 @@
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tomStr = getStandardDate(tomorrow);
 
-      // الفرز التلقائي: مهام اليوم أولاً، ثم غداً، ثم التواريخ الأبعد
       const sorted = [...appData.tasks].sort((a, b) => {
         if (a.targetDate === b.targetDate) return 0;
         return a.targetDate > b.targetDate ? 1 : -1;
@@ -690,7 +710,6 @@
       document.getElementById('taskAlertTime').value = '';
     }
 
-    // التأجيل الذكي بضغطة زر واحدة (+1 يوم)
     function postponeToTomorrow(id) {
       const t = appData.tasks.find(x => x.id === id);
       if (t) {
@@ -713,11 +732,37 @@
       renderTasks();
     }
 
-    // 7. المالية وسعر الصرف والرسم البياني
+    // 7. المالية وسعر الصرف
     function updateExchangeRate(val) {
-      appData.usdRate = parseFloat(val) || 15000;
+      const rate = parseFloat(val);
+      appData.usdRate = (!isNaN(rate) && rate > 0) ? rate : 0;
       save();
-      renderFinance();
+      calculateTotalWealth();
+    }
+
+    function calculateTotalWealth() {
+      let sypInc = 0, sypExp = 0;
+      let usdInc = 0, usdExp = 0;
+
+      appData.finances.forEach(f => {
+        const cur = f.currency || 'SYP';
+        const amt = parseFloat(f.amount) || 0;
+        if (cur === 'USD') {
+          if (f.type === 'income') usdInc += amt; else usdExp += amt;
+        } else {
+          if (f.type === 'income') sypInc += amt; else sypExp += amt;
+        }
+      });
+
+      const sypNet = sypInc - sypExp;
+      const usdNet = usdInc - usdExp;
+      const rate = parseFloat(appData.usdRate) || 0;
+      const totalWealthSYP = sypNet + (usdNet * rate);
+      
+      const totalEl = document.getElementById('totalEstimatedWealth');
+      if (totalEl) {
+        totalEl.innerText = `${Math.round(totalWealthSYP).toLocaleString()} ل.س`;
+      }
     }
 
     function toggleCategorySelect(val) {
@@ -769,12 +814,8 @@
       document.getElementById('usdNet').innerText = usdNet.toLocaleString();
       document.getElementById('usdNet').style.color = usdNet >= 0 ? '#38bdf8' : '#f87171';
 
-      // حساب الميزانية الكلية بسعر الصرف
-      const rate = appData.usdRate || 15000;
-      document.getElementById('usdExchangeRate').value = rate;
-      const totalWealthSYP = sypNet + (usdNet * rate);
-      document.getElementById('totalEstimatedWealth').innerText = `${totalWealthSYP.toLocaleString()} ل.س`;
-
+      document.getElementById('usdExchangeRate').value = appData.usdRate || 15000;
+      calculateTotalWealth();
       renderFinanceChart();
     }
 
@@ -797,12 +838,10 @@
     }
     function deleteFin(idx) { appData.finances.splice(idx, 1); save(); renderFinance(); }
 
-    // رسم بياني لمصاريف الشهر
     function renderFinanceChart() {
       const svg = document.getElementById('financeChartSvg');
       svg.innerHTML = '';
 
-      // جمع مصاريف آخر 15 يوماً
       const days = [];
       const now = new Date();
       let maxExp = 1;
@@ -823,7 +862,6 @@
         days.push({ day: d.getDate(), sum });
       }
 
-      // رسم مسار المنحنى Polyline
       let points = "";
       const stepX = 280 / 14;
       days.forEach((item, idx) => {
@@ -836,7 +874,7 @@
       svg.innerHTML = `<polyline fill="none" stroke="#f87171" stroke-width="2" points="${points}"/>` + svg.innerHTML;
     }
 
-    // 8. نظام التنبيهات المباشرة التلقائي
+    // 8. التنبيهات
     function requestNotificationPermission() {
       if (!("Notification" in window)) { alert("المتصفح لا يدعم التنبيهات."); return; }
       Notification.requestPermission().then(p => {
@@ -848,14 +886,12 @@
       if (!("Notification" in window) || Notification.permission !== 'granted') return;
 
       const offset = appData.prayerAlertOffset || 10;
-      // 1. تنبيه الصلاة المسبق
       pOrder.forEach(p => {
         if (p.total - curM === offset) {
           new Notification("تنبيه الصلاة 🕌", { body: `اقترب موعد أذان ${p.name} (متبقي ${offset} دقائق)` });
         }
       });
 
-      // 2. تنبيه الأذكار
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
       if (timeStr === "08:00") {
         new Notification("أذكار الصباح ☀️", { body: "ابدأ يومك بذكر الله وتفقد أذكار الصباح" });
@@ -864,7 +900,6 @@
         new Notification("أذكار المساء 🌙", { body: "حان الآن وقت أذكار المساء" });
       }
 
-      // 3. تنبيه المهام المتبقية مساءً (الساعة 21:00)
       if (timeStr === "21:00") {
         const pendingCount = appData.tasks.filter(t => t.targetDate === todayDateStr && t.status !== 'completed').length;
         if (pendingCount > 0) {
@@ -872,7 +907,6 @@
         }
       }
 
-      // 4. تنبيه مخصص لكل مهمة محدد لها وقت
       appData.tasks.forEach(t => {
         if (t.targetDate === todayDateStr && t.status !== 'completed' && t.alertTime === timeStr) {
           new Notification("تذكير بمهمة ⏰", { body: t.text });
@@ -880,7 +914,7 @@
       });
     }
 
-    // 9. التصدير المخصص لـ Excel (بدون حالة أو تاريخ وضع المهام)
+    // 9. التصدير لـ Excel
     function openExportModal() { document.getElementById('exportModal').classList.remove('hidden'); }
     function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
 
@@ -911,7 +945,6 @@
       </head>
       <body>`;
 
-      // 1. المهام: تم حذف الحالة وتاريخ الوضع تماماً بناءً على طلبك
       if (expTasks) {
         const pMap = { high: 'عاجلة ⚡', med: 'مهمة', low: 'عادية' };
         const nonCompleted = appData.tasks
@@ -942,7 +975,6 @@
         excelHTML += `</table>`;
       }
 
-      // 2. الصلوات مع إجمالي المصلاة والفائتة
       if (expPrayers) {
         let totalPrayed = 0, totalMissed = 0;
         Object.keys(appData.prayersHistory).forEach(d => {
@@ -971,7 +1003,6 @@
         excelHTML += `</table>`;
       }
 
-      // 3. المالية مع المجاميع وسعر الصرف
       if (expFinance) {
         let sypInc = 0, sypExp = 0, usdInc = 0, usdExp = 0;
         appData.finances.forEach(f => {
