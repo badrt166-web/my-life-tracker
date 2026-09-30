@@ -41,7 +41,7 @@
     .azkar-switch button { padding: 5px 10px; font-size: 11px; border-radius: 8px; border: 1px solid #334155; background: #0b1120; color: #94a3b8; cursor: pointer; }
     .azkar-switch button.active { background: #0284c7; color: #fff; border-color: #0284c7; }
     .zekr-card { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 8px; cursor: pointer; }
-    .zekr-card.completed { border-color: #10b981; background: rgba(16, 185, 129, 0.08); }
+    .zekr-card.completed { border-color: #10b981; background: rgba(16, 185, 129, 0.08); opacity: 0.65; }
     .zekr-text { font-size: 13px; line-height: 1.6; color: #e2e8f0; margin-bottom: 8px; }
     .zekr-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
     .counter-badge { background: #38bdf8; color: #0b1120; font-weight: bold; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
@@ -62,8 +62,9 @@
     .badge-completed { background: #064e3b; color: #a7f3d0; }
     .date-badge { font-size: 10px; background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 1px 6px; border-radius: 5px; }
 
-    .item-list { max-height: 290px; overflow-y: auto; }
+    .item-list { max-height: 320px; overflow-y: auto; }
     .list-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #0b1120; border-radius: 10px; margin-bottom: 8px; font-size: 13px; border: 1px solid #334155; }
+    .list-row.is-completed { opacity: 0.55; background: #080d1a; }
     .btn-action { background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px 6px; font-size: 12px; border-radius: 5px; }
     .btn-action:hover { background: #334155; color: #fff; }
 
@@ -194,9 +195,9 @@
             </select>
             <input type="date" id="taskCustomDate" class="hidden">
             <select id="taskPriority" style="width: 120px;">
-              <option value="med">أولوية: مهمة</option>
               <option value="high">أولوية: عاجلة ⚡</option>
-              <option value="low">أولوية: عادية</option>
+              <option value="med" selected>أولوية: مهمة ⭐</option>
+              <option value="low">أولوية: عادية 🔹</option>
             </select>
           </div>
           <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
@@ -333,15 +334,6 @@
   </div>
 
   <script>
-    // إلغاء أي Service Worker قديم عالق يسبب بطء التحميل
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(registrations => {
-        for (let registration of registrations) {
-          registration.unregister();
-        }
-      }).catch(() => {});
-    }
-
     // 1. مواقيت دمشق المعتمدة
     const damascusTimes = {
       fajr: { name: 'الفجر', h: 5, m: 6, display: '05:06 ص' },
@@ -405,7 +397,8 @@
     setInterval(updateClockAndCountdown, 1000);
 
     // 3. إدارة التخزين
-    let appData = JSON.parse(localStorage.getItem('my_life_tracker_v8')) || {
+    let appData = JSON.parse(localStorage.getItem('my_life_tracker_v9')) || {
+      lastActiveDate: todayDateStr,
       prayersHistory: {},
       extrasHistory: {},
       qadaCount: 0,
@@ -416,6 +409,13 @@
       azkar: {}
     };
 
+    // إعادة ضبط الأذكار إذا بدأ يوم جديد
+    if (appData.lastActiveDate !== todayDateStr) {
+      appData.lastActiveDate = todayDateStr;
+      appData.azkar = {}; // تصفير عدادات الأذكار لليوم الجديد
+      save();
+    }
+
     let selectedPrayerDate = todayDateStr;
 
     if (!appData.prayersHistory[todayDateStr]) {
@@ -425,7 +425,7 @@
     }
 
     function save() {
-      localStorage.setItem('my_life_tracker_v8', JSON.stringify(appData));
+      localStorage.setItem('my_life_tracker_v9', JSON.stringify(appData));
     }
 
     function switchTab(id, btn) {
@@ -537,7 +537,7 @@
       });
     }
 
-    // 5. الأذكار
+    // 5. الأذكار (الصباح يبدأ من منتصف الليل 00:00 وحتى العصر 15:48)
     const azkarSabah = [
       { id: 's1', text: 'أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لا إِلَهَ إِلاَّ اللَّهُ.', count: 1 },
       { id: 's2', text: 'اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ.', count: 1 },
@@ -551,7 +551,10 @@
       { id: 'm4', text: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (مئة مرة)', count: 100 }
     ];
 
-    let azkarMode = (new Date().getHours() >= 4 && new Date().getHours() < 15) ? 'sabah' : 'masa';
+    // التبديل التلقائي الدقيق: من 00:00 حتى 15:48 صباحاً، وبعدها مساءً
+    const currentHour = new Date().getHours();
+    let azkarMode = (currentHour < 16) ? 'sabah' : 'masa';
+
     function setAzkarMode(mode) {
       azkarMode = mode;
       document.getElementById('btnAzkarSabah').className = (mode === 'sabah') ? 'active' : '';
@@ -559,6 +562,7 @@
       document.getElementById('azkarModeTitle').innerText = (mode === 'sabah') ? 'أذكار الصباح' : 'أذكار المساء';
       renderAzkar();
     }
+
     function renderAzkar() {
       const container = document.getElementById('azkarContainer');
       container.innerHTML = '';
@@ -570,7 +574,7 @@
           <div class="zekr-card ${done ? 'completed' : ''}" onclick="decrementZekr('${z.id}', ${z.count})">
             <div class="zekr-text">${z.text}</div>
             <div class="zekr-footer">
-              <span>${done ? '✔ اكتمل' : 'انقر للتسبيح'}</span>
+              <span>${done ? '✔ اكتملت الحمد لله' : 'انقر للتسبيح'}</span>
               <span class="counter-badge">${done ? 'تم' : left}</span>
             </div>
           </div>`;
@@ -581,7 +585,7 @@
       if (cur > 0) { appData.azkar[id] = cur - 1; save(); renderAzkar(); }
     }
 
-    // 6. المهام
+    // 6. المهام (الترتيب الذكي الدقيق: غير المنجزة أولاً حسب التاريخ والأولوية، والمنجزة في الأسفل)
     function toggleCustomDate(v) {
       const el = document.getElementById('taskCustomDate');
       if (v === 'custom') { el.classList.remove('hidden'); el.value = todayDateStr; el.required = true; }
@@ -604,9 +608,40 @@
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tomStr = getStandardDate(tomorrow);
 
+      const pWeight = { high: 3, med: 2, low: 1 };
+
+      // الفرز الذكي الدقيق:
+      // 1. المهام غير المنجزة تظهر قبل المنجزة دائماً
+      // 2. غير المنجزة: ترتب زمنياً (تاريخ أقرب أولاً)
+      // 3. في نفس التاريخ: الأولوية الأعلى تسبق (high ثم med ثم low)
       const sorted = [...appData.tasks].sort((a, b) => {
-        if (a.targetDate === b.targetDate) return 0;
-        return a.targetDate > b.targetDate ? 1 : -1;
+        const aCompleted = (a.status === 'completed');
+        const bCompleted = (b.status === 'completed');
+
+        // إذا أحدهما منجز والآخر غير منجز: غير المنجز في الأعلى
+        if (aCompleted !== bCompleted) {
+          return aCompleted ? 1 : -1;
+        }
+
+        // إذا كان كلاهما منجزين: الأحدث إضافة أولاً
+        if (aCompleted && bCompleted) {
+          return b.id - a.id;
+        }
+
+        // إذا كان كلاهما غير منجزين:
+        // أ. التاريخ الأقرب أولاً
+        if (a.targetDate !== b.targetDate) {
+          return a.targetDate > b.targetDate ? 1 : -1;
+        }
+
+        // ب. في نفس اليوم: الأولوية الأعلى أولاً (عاجلة ⚡ ثم مهمة ⭐ ثم عادية 🔹)
+        const weightA = pWeight[a.priority || 'med'] || 2;
+        const weightB = pWeight[b.priority || 'med'] || 2;
+        if (weightA !== weightB) {
+          return weightB - weightA;
+        }
+
+        return b.id - a.id;
       });
 
       const filtered = sorted.filter(t => {
@@ -623,28 +658,32 @@
 
       const statusMap = { pending: 'مطلوبة', postponed: 'مؤجلة', completed: 'منجزة' };
       const priorityMap = { high: 'priority-high', med: 'priority-med', low: 'priority-low' };
+      const priorityLabel = { high: 'عاجلة ⚡', med: 'مهمة ⭐', low: 'عادية 🔹' };
 
       filtered.forEach(t => {
         let dateLabel = t.targetDate;
         if (t.targetDate === todayDateStr) dateLabel = 'اليوم';
         else if (t.targetDate === tomStr) dateLabel = 'غداً';
 
+        const isDone = (t.status === 'completed');
+
         el.innerHTML += `
-          <div class="list-row ${priorityMap[t.priority || 'med']}">
+          <div class="list-row ${isDone ? 'is-completed' : priorityMap[t.priority || 'med']}">
             <div>
-              <div style="${t.status === 'completed' ? 'text-decoration:line-through; color:#64748b;' : 'font-weight:500;'}">
+              <div style="${isDone ? 'text-decoration:line-through; color:#64748b;' : 'font-weight:500;'}">
                 ${t.text}
                 ${t.alertTime ? `<span style="font-size:10px; color:#38bdf8; margin-right:4px;">⏰ ${t.alertTime}</span>` : ''}
               </div>
               <div style="margin-top:4px;">
                 <span class="date-badge">${dateLabel}</span>
                 <span class="badge badge-${t.status}">${statusMap[t.status]}</span>
+                <span style="font-size:10px; color:#94a3b8; margin-right:4px;">(${priorityLabel[t.priority || 'med']})</span>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:2px;">
-              ${t.status !== 'completed' ? `<button class="btn-action" title="إنجاز" onclick="setTaskStatus(${t.id}, 'completed')">✔</button>` : ''}
-              ${t.status !== 'completed' ? `<button class="btn-action" title="تأجيل للغد (+1 يوم)" onclick="postponeToTomorrow(${t.id})" style="color:#a855f7; font-weight:bold;">+1يوم</button>` : ''}
-              ${t.status === 'completed' ? `<button class="btn-action" title="إعادة للمطلوبة" onclick="setTaskStatus(${t.id}, 'pending')">↩</button>` : ''}
+              ${!isDone ? `<button class="btn-action" title="إنجاز" onclick="setTaskStatus(${t.id}, 'completed')">✔</button>` : ''}
+              ${!isDone ? `<button class="btn-action" title="تأجيل للغد (+1 يوم)" onclick="postponeToTomorrow(${t.id})" style="color:#a855f7; font-weight:bold;">+1يوم</button>` : ''}
+              ${isDone ? `<button class="btn-action" title="إعادة للمطلوبة" onclick="setTaskStatus(${t.id}, 'pending')">↩</button>` : ''}
               <button class="btn-action" title="حذف" onclick="deleteTask(${t.id})" style="color:#ef4444;">✕</button>
             </div>
           </div>`;
@@ -697,7 +736,11 @@
 
     function setTaskStatus(id, st) {
       const t = appData.tasks.find(x => x.id === id);
-      if (t) { t.status = st; save(); renderTasks(); }
+      if (t) { 
+        t.status = st; 
+        save(); 
+        renderTasks(); 
+      }
     }
     function deleteTask(id) {
       appData.tasks = appData.tasks.filter(x => x.id !== id);
@@ -919,7 +962,7 @@
       <body>`;
 
       if (expTasks) {
-        const pMap = { high: 'عاجلة ⚡', med: 'مهمة', low: 'عادية' };
+        const pMap = { high: 'عاجلة ⚡', med: 'مهمة ⭐', low: 'عادية 🔹' };
         const nonCompleted = appData.tasks
           .filter(t => t.status === 'pending' || t.status === 'postponed')
           .sort((a, b) => a.targetDate > b.targetDate ? 1 : -1);
