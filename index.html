@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مساعدي اليومي الشامل</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Tahoma, Arial, sans-serif; }
+    body { background-color: #0b1120; color: #f8fafc; display: flex; justify-content: center; padding: 12px; min-height: 100vh; }
+    .container { width: 100%; max-width: 520px; padding-bottom: 30px; }
+    
+    header { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 14px; text-align: center; margin-bottom: 12px; }
+    .clock { font-size: 26px; font-weight: 800; color: #38bdf8; font-variant-numeric: tabular-nums; }
+    .date-str { font-size: 13px; color: #94a3b8; margin-top: 3px; font-weight: 500; }
+    .prayer-banner { margin-top: 10px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 10px; padding: 8px 12px; font-size: 13px; color: #7dd3fc; display: flex; justify-content: space-between; align-items: center; }
+
+    .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); background: #1e293b; border-radius: 14px; padding: 4px; margin-bottom: 12px; border: 1px solid #334155; gap: 4px; }
+    .nav-tabs button { padding: 9px 2px; background: transparent; border: none; color: #94a3b8; font-size: 13px; cursor: pointer; border-radius: 10px; transition: 0.2s; font-weight: 600; }
+    .nav-tabs button.active { background: #38bdf8; color: #0b1120; font-weight: bold; }
+
+    .card { background: #1e293b; border-radius: 16px; padding: 14px; border: 1px solid #334155; margin-bottom: 12px; }
+    .card-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: #e2e8f0; }
+
+    input, select { width: 100%; padding: 9px 12px; background: #0b1120; border: 1px solid #334155; border-radius: 10px; color: #fff; margin-bottom: 8px; font-size: 13px; outline: none; }
+    input:focus, select:focus { border-color: #38bdf8; }
+    .btn-submit { width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .btn-submit:active { background: #0369a1; }
+
+    /* Prayers */
+    .prayer-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-radius: 10px; margin-bottom: 6px; border: 1px solid #334155; background: #0b1120; }
+    .prayer-row.done { background: rgba(16, 185, 129, 0.15); border-color: #10b981; }
+    .prayer-time { font-size: 12px; color: #94a3b8; font-weight: bold; }
+    .extra-prayers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #334155; font-size: 12px; }
+    .qada-box { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    .counter-btn { width: 28px; height: 28px; background: #334155; border: none; color: #fff; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+    /* Azkar */
+    .azkar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .azkar-switch { display: flex; gap: 6px; }
+    .azkar-switch button { padding: 5px 10px; font-size: 11px; border-radius: 8px; border: 1px solid #334155; background: #0b1120; color: #94a3b8; cursor: pointer; }
+    .azkar-switch button.active { background: #0284c7; color: #fff; border-color: #0284c7; }
+    .zekr-card { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 8px; cursor: pointer; }
+    .zekr-card.completed { border-color: #10b981; background: rgba(16, 185, 129, 0.08); }
+    .zekr-text { font-size: 13px; line-height: 1.6; color: #e2e8f0; margin-bottom: 8px; }
+    .zekr-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
+    .counter-badge { background: #38bdf8; color: #0b1120; font-weight: bold; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
+    .zekr-card.completed .counter-badge { background: #10b981; color: #fff; }
+
+    /* Tasks */
+    .filter-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+    .filter-tabs button { flex: 1; padding: 6px 2px; font-size: 11px; background: #0b1120; border: 1px solid #334155; color: #94a3b8; border-radius: 8px; cursor: pointer; }
+    .filter-tabs button.active { background: #334155; color: #fff; border-color: #475569; font-weight: bold; }
+    
+    .priority-high { border-right: 4px solid #ef4444 !important; }
+    .priority-med { border-right: 4px solid #f59e0b !important; }
+    .priority-low { border-right: 4px solid #38bdf8 !important; }
+
+    .badge { font-size: 10px; padding: 2px 6px; border-radius: 5px; display: inline-block; }
+    .badge-pending { background: #78350f; color: #fde68a; }
+    .badge-postponed { background: #581c87; color: #e9d5ff; }
+    .badge-completed { background: #064e3b; color: #a7f3d0; }
+    .date-badge { font-size: 10px; background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 1px 6px; border-radius: 5px; }
+
+    .item-list { max-height: 290px; overflow-y: auto; }
+    .list-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #0b1120; border-radius: 10px; margin-bottom: 8px; font-size: 13px; border: 1px solid #334155; }
+    .btn-action { background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px 6px; font-size: 12px; border-radius: 5px; }
+    .btn-action:hover { background: #334155; color: #fff; }
+
+    /* Finance */
+    .finance-card { background: #0b1120; border-radius: 12px; padding: 10px; border: 1px solid #334155; margin-bottom: 8px; }
+    .currency-title { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; text-align: center; }
+    .balance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; text-align: center; }
+    .balance-box { background: #1e293b; padding: 6px; border-radius: 8px; }
+    .balance-box span { font-size: 10px; color: #94a3b8; display: block; margin-bottom: 2px; }
+    .balance-box strong { font-size: 13px; }
+
+    .total-wealth-box { background: linear-gradient(135deg, #0284c7, #0369a1); border-radius: 12px; padding: 10px 14px; color: #fff; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* Charts Area */
+    .chart-container { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-top: 10px; }
+    .chart-title { font-size: 12px; color: #94a3b8; margin-bottom: 8px; font-weight: bold; }
+    svg { display: block; width: 100%; height: 110px; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; padding: 15px; z-index: 100; }
+    .modal-content { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; width: 100%; max-width: 360px; }
+    .modal-option { display: flex; align-items: center; gap: 10px; background: #0b1120; border: 1px solid #334155; padding: 10px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
+    .modal-option input { width: 18px; height: 18px; margin: 0; accent-color: #38bdf8; }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <div id="liveClock" class="clock">12:00:00</div>
+      <div id="liveDate" class="date-str">جارٍ تحميل الوقت...</div>
+      
+      <div class="prayer-banner">
+        <span>🕌 الصلاة القادمة: <b id="nextPrayerName">--</b></span>
+        <span>متبقي: <b id="nextPrayerTimer">--</b></span>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="active" onclick="switchTab('prayers', this)">الصلوات</button>
+      <button onclick="switchTab('azkar', this)">الأذكار</button>
+      <button onclick="switchTab('tasks', this)">المهام</button>
+      <button onclick="switchTab('finance', this)">المالية</button>
+    </div>
+
+    <!-- 1. PRAYERS TAB -->
+    <div id="tab-prayers" class="card">
+      <div class="card-title">
+        <span>صلوات اليوم</span>
+        <span id="prayerProgress" style="color: #38bdf8;">0 / 5</span>
+      </div>
+
+      <!-- تصفح الأيام السابقة (الأرشيف) -->
+      <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 11px; color: #94a3b8;">عرض يوم:</span>
+        <input type="date" id="prayerArchiveDate" onchange="loadPrayersForDate(this.value)" style="margin: 0; padding: 6px 10px;">
+      </div>
+
+      <div id="prayersList"></div>
+
+      <!-- ضبط تنبيه الصلاة المسبق -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0b1120; padding:8px 12px; border-radius:10px; border:1px solid #334155; margin-top:8px; font-size:12px;">
+        <span>تنبيه قبل الصلاة بـ:</span>
+        <select id="prayerAlertOffset" onchange="saveAlertOffset(this.value)" style="width:110px; margin:0; padding:4px 8px;">
+          <option value="5">5 دقائق</option>
+          <option value="10" selected>10 دقائق</option>
+          <option value="15">15 دقيقة</option>
+          <option value="20">20 دقيقة</option>
+        </select>
+      </div>
+
+      <!-- السنن -->
+      <div class="extra-prayers">
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="chkSunnah" onchange="toggleExtra('sunnah')" style="width:16px; height:16px; margin:0; accent-color:#38bdf8;">
+          سنن الرواتب
+        </label>
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="chkDuha" onchange="toggleExtra('duha')" style="width:16px; height:16px; margin:0; accent-color:#38bdf8;">
+          صلاة الضحى
+        </label>
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="chkWitr" onchange="toggleExtra('witr')" style="width:16px; height:16px; margin:0; accent-color:#38bdf8;">
+          قيام الليل / الوتر
+        </label>
+      </div>
+
+      <!-- قضاء الصلوات -->
+      <div class="qada-box">
+        <div>
+          <span style="font-size:12px; font-weight:bold; display:block;">صلوات بذمتي (قضاء):</span>
+          <span style="font-size:10px; color:#94a3b8;">اضغط بعد كل قضاء لتحديث العداد</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="counter-btn" onclick="updateQada(-1)">-</button>
+          <span id="qadaCount" style="font-weight:bold; font-size:15px; color:#f87171;">0</span>
+          <button class="counter-btn" onclick="updateQada(1)">+</button>
+        </div>
+      </div>
+
+      <!-- الرسم البياني للالتزام بالصلوات آخر 30 يوماً -->
+      <div class="chart-container">
+        <div class="chart-title">📊 نسبة الالتزام بالصلوات آخر 30 يوماً (<span id="prayerCommitRate">0%</span>)</div>
+        <svg id="prayerChartSvg" viewBox="0 0 300 80"></svg>
+      </div>
+    </div>
+
+    <!-- 2. AZKAR TAB -->
+    <div id="tab-azkar" class="card hidden">
+      <div class="azkar-header">
+        <span id="azkarModeTitle" style="font-weight: bold; color: #38bdf8;">أذكار الصباح</span>
+        <div class="azkar-switch">
+          <button id="btnAzkarSabah" onclick="setAzkarMode('sabah')">الصباح</button>
+          <button id="btnAzkarMasa" onclick="setAzkarMode('masa')">المساء</button>
+        </div>
+      </div>
+      <div class="item-list" id="azkarContainer" style="max-height: 380px;"></div>
+    </div>
+
+    <!-- 3. TASKS TAB -->
+    <div id="tab-tasks" class="hidden">
+      <div class="card">
+        <form onsubmit="addTask(event)">
+          <input type="text" id="taskInput" placeholder="اكتب المهمة هنا..." required>
+          <div style="display: flex; gap: 6px;">
+            <select id="taskDayChoice" onchange="toggleCustomDate(this.value)">
+              <option value="today">مهمة اليوم</option>
+              <option value="tomorrow">مهمة غداً</option>
+              <option value="custom">تاريخ مخصص...</option>
+            </select>
+            <input type="date" id="taskCustomDate" class="hidden">
+            <select id="taskPriority" style="width: 120px;">
+              <option value="med">أولوية: مهمة</option>
+              <option value="high">أولوية: عاجلة ⚡</option>
+              <option value="low">أولوية: عادية</option>
+            </select>
+          </div>
+          <!-- وقت الإشعار للمهمة -->
+          <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 11px; color: #94a3b8; white-space: nowrap;">⏰ إشعار تنبيه:</span>
+            <input type="time" id="taskAlertTime" style="margin: 0;">
+          </div>
+          <button type="submit" class="btn-submit">+ حفظ المهمة</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="filter-tabs">
+          <button class="active" onclick="filterTasks('all', this)">الكل (مرتبة)</button>
+          <button onclick="filterTasks('today', this)">اليوم</button>
+          <button onclick="filterTasks('tomorrow', this)">غداً</button>
+          <button onclick="filterTasks('postponed', this)">المؤجلة</button>
+          <button onclick="filterTasks('completed', this)">المنجزة</button>
+        </div>
+        <div class="item-list" id="tasksList"></div>
+      </div>
+    </div>
+
+    <!-- 4. FINANCE TAB -->
+    <div id="tab-finance" class="hidden">
+      <div class="card">
+        
+        <!-- بطاقة الثروة الكلية وسعر الصرف -->
+        <div class="total-wealth-box">
+          <div>
+            <span style="font-size: 11px; opacity: 0.9; display: block;">إجمالي الميزانية التقديرية (ل.س):</span>
+            <strong id="totalEstimatedWealth" style="font-size: 18px;">0 ل.س</strong>
+          </div>
+          <div style="text-align: left;">
+            <span style="font-size: 10px; opacity: 0.85; display: block;">سعر الصرف ($):</span>
+            <input type="number" id="usdExchangeRate" onchange="updateExchangeRate(this.value)" placeholder="15000" style="width: 90px; margin: 0; padding: 4px 8px; font-size: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); text-align: center;">
+          </div>
+        </div>
+
+        <!-- سوري -->
+        <div class="finance-card">
+          <div class="currency-title">🇸🇾 الليرة السورية (ل.س)</div>
+          <div class="balance-grid">
+            <div class="balance-box"><span>المكتسب</span><strong id="sypIncome" style="color: #34d399;">0</strong></div>
+            <div class="balance-box"><span>المدفوع</span><strong id="sypExpense" style="color: #f87171;">0</strong></div>
+            <div class="balance-box"><span>الصافي</span><strong id="sypNet" style="color: #38bdf8;">0</strong></div>
+          </div>
+        </div>
+
+        <!-- دولار -->
+        <div class="finance-card">
+          <div class="currency-title">💵 الدولار الأمريكي ($)</div>
+          <div class="balance-grid">
+            <div class="balance-box"><span>المكتسب</span><strong id="usdIncome" style="color: #34d399;">0</strong></div>
+            <div class="balance-box"><span>المدفوع</span><strong id="usdExpense" style="color: #f87171;">0</strong></div>
+            <div class="balance-box"><span>الصافي</span><strong id="usdNet" style="color: #38bdf8;">0</strong></div>
+          </div>
+        </div>
+
+        <!-- إضافة حركة -->
+        <form onsubmit="addTransaction(event)">
+          <div style="display: flex; gap: 6px;">
+            <select id="finType" style="flex: 1;" onchange="toggleCategorySelect(this.value)">
+              <option value="expense">مصروف (مدفوع)</option>
+              <option value="income">دخل (مكتسب)</option>
+            </select>
+            <select id="finCurrency" style="width: 110px;">
+              <option value="SYP">ل.س (سوري)</option>
+              <option value="USD">$ (دولار)</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 6px;">
+            <select id="finCategory" style="flex: 1;">
+              <option value="طعام ومشتريات">طعام ومشتريات</option>
+              <option value="فواتير وكهرباء">فواتير وكهرباء</option>
+              <option value="مواصلات وبنزين">مواصلات وبنزين</option>
+              <option value="شخصي وعائلة">شخصي وعائلة</option>
+              <option value="دراسة وعمل">دراسة وعمل</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+            <input type="number" id="finAmount" step="any" placeholder="المبلغ" required style="width: 140px;">
+          </div>
+
+          <input type="text" id="finNote" placeholder="البيان (مثال: طعام، بنزين...)" required>
+          <button type="submit" class="btn-submit">+ تسجيل الحركة المالية</button>
+        </form>
+
+        <!-- رسم بياني لصعود وهبوط المصاريف هذا الشهر -->
+        <div class="chart-container">
+          <div class="chart-title">📈 حركة المصاريف اليومية (خلال الشهر)</div>
+          <svg id="financeChartSvg" viewBox="0 0 300 90"></svg>
+        </div>
+
+      </div>
+
+      <div class="card">
+        <div class="card-title">السجل المالي الأخير</div>
+        <div class="item-list" id="transactionsList"></div>
+      </div>
+    </div>
+
+    <!-- زر التصدير والتنبيهات -->
+    <div style="display:flex; justify-content:center; gap:8px; margin-top:14px;">
+      <button onclick="requestNotificationPermission()" class="btn-action" style="background:#1e293b; border:1px solid #334155; padding:8px 14px; border-radius:10px;">
+        🔔 تفعيل تنبيهات الشاشة
+      </button>
+      <button onclick="openExportModal()" style="background:#10b981; border:none; color:#fff; padding:10px 18px; border-radius:10px; font-weight:bold; cursor:pointer;">
+        📊 تصدير Excel مخصص
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Modal خيارات التصدير -->
+  <div id="exportModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3 style="font-size: 15px; margin-bottom: 14px; color: #38bdf8; text-align: center;">اختر ما ترغب بتصديره إلى Excel:</h3>
+      
+      <div class="modal-option">
+        <input type="checkbox" id="chkExpTasks" checked>
+        <label for="chkExpTasks">المهام (المطلوبة والمؤجلة مع الأولويات)</label>
+      </div>
+
+      <div class="modal-option">
+        <input type="checkbox" id="chkExpPrayers" checked>
+        <label for="chkExpPrayers">الصلوات (مع إجمالي المصلاة والفائتة)</label>
+      </div>
+
+      <div class="modal-option">
+        <input type="checkbox" id="chkExpFinance" checked>
+        <label for="chkExpFinance">المالية (مع الفئات وإجمالي المكتسب والمدفوع)</label>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 15px;">
+        <button onclick="executeSelectedExport()" class="btn-submit" style="background: #10b981;">تصدير الآن</button>
+        <button onclick="closeExportModal()" class="btn-submit" style="background: #334155; width: 80px;">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. مواقيت دمشق المعتمدة
+    const damascusTimes = {
+      fajr: { name: 'الفجر', h: 5, m: 6, display: '05:06 ص' },
+      sunrise: { name: 'الشروق', h: 6, m: 28, display: '06:28 ص' },
+      dhuhr: { name: 'الظهر', h: 12, m: 25, display: '12:25 م' },
+      asr: { name: 'العصر', h: 15, m: 48, display: '03:48 م' },
+      maghrib: { name: 'المغرب', h: 18, m: 24, display: '06:24 م' },
+      isha: { name: 'العشاء', h: 19, m: 39, display: '07:39 م' }
+    };
+    const prayerKeys = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+
+    function getStandardDate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+    const todayDateStr = getStandardDate(new Date());
+
+    // 2. تحديث الساعة والعد التنازلي المباشر
+    function updateClockAndCountdown() {
+      const now = new Date();
+      document.getElementById('liveClock').innerText = now.toLocaleTimeString('ar-SY', { hour12: true });
+      document.getElementById('liveDate').innerText = now.toLocaleDateString('ar-SY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+      const curM = now.getHours() * 60 + now.getMinutes();
+      const pOrder = [
+        { key: 'fajr', ...damascusTimes.fajr, total: damascusTimes.fajr.h * 60 + damascusTimes.fajr.m },
+        { key: 'dhuhr', ...damascusTimes.dhuhr, total: damascusTimes.dhuhr.h * 60 + damascusTimes.dhuhr.m },
+        { key: 'asr', ...damascusTimes.asr, total: damascusTimes.asr.h * 60 + damascusTimes.asr.m },
+        { key: 'maghrib', ...damascusTimes.maghrib, total: damascusTimes.maghrib.h * 60 + damascusTimes.maghrib.m },
+        { key: 'isha', ...damascusTimes.isha, total: damascusTimes.isha.h * 60 + damascusTimes.isha.m }
+      ];
+
+      let nextP = null;
+      let diff = 0;
+
+      for (let p of pOrder) {
+        if (p.total > curM) {
+          nextP = p.name;
+          diff = p.total - curM;
+          break;
+        }
+      }
+
+      if (!nextP) {
+        nextP = 'الفجر (غداً)';
+        diff = (24 * 60 - curM) + pOrder[0].total;
+      }
+
+      const diffH = Math.floor(diff / 60);
+      const diffMin = diff % 60;
+      document.getElementById('nextPrayerName').innerText = nextP;
+      document.getElementById('nextPrayerTimer').innerText = `${diffH} س و ${diffMin} د`;
+
+      // فحص تنبيهات المهام والصلوات كل دقيقة
+      if (now.getSeconds() === 0) {
+        checkAutomatedNotifications(now, curM, pOrder);
+      }
+    }
+
+    setInterval(updateClockAndCountdown, 1000);
+
+    // 3. التخزين
+    let appData = JSON.parse(localStorage.getItem('my_life_tracker_v8')) || {
+      prayersHistory: {},
+      extrasHistory: {},
+      qadaCount: 0,
+      prayerAlertOffset: 10,
+      usdRate: 15000,
+      finances: [],
+      tasks: [],
+      azkar: {}
+    };
+
+    let selectedPrayerDate = todayDateStr;
+
+    if (!appData.prayersHistory[todayDateStr]) {
+      appData.prayersHistory[todayDateStr] = { fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false };
+      appData.extrasHistory[todayDateStr] = { sunnah: false, duha: false, witr: false };
+      save();
+    }
+
+    function save() {
+      localStorage.setItem('my_life_tracker_v8', JSON.stringify(appData));
+    }
+
+    function switchTab(id, btn) {
+      document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['prayers', 'azkar', 'tasks', 'finance'].forEach(t => document.getElementById(`tab-${t}`).classList.add('hidden'));
+      document.getElementById(`tab-${id}`).classList.remove('hidden');
+      if (id === 'prayers') renderPrayerChart();
+      if (id === 'finance') renderFinanceChart();
+    }
+
+    // 4. الصلوات والسنن والأرشيف
+    function loadPrayersForDate(dateStr) {
+      if (!dateStr) return;
+      selectedPrayerDate = dateStr;
+      if (!appData.prayersHistory[selectedPrayerDate]) {
+        appData.prayersHistory[selectedPrayerDate] = { fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false };
+        save();
+      }
+      renderPrayers();
+    }
+
+    function renderPrayers() {
+      document.getElementById('prayerArchiveDate').value = selectedPrayerDate;
+      const el = document.getElementById('prayersList');
+      el.innerHTML = '';
+      let done = 0;
+      const dayP = appData.prayersHistory[selectedPrayerDate] || {};
+
+      prayerKeys.forEach(k => {
+        const isDone = !!dayP[k];
+        if (isDone) done++;
+        el.innerHTML += `
+          <div class="prayer-row ${isDone ? 'done' : ''}">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="togglePrayer('${k}')" style="width:18px; height:18px; margin:0; accent-color:#10b981; cursor:pointer;">
+              <span style="font-weight:500;">${damascusTimes[k].name}</span>
+            </label>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="prayer-time">${damascusTimes[k].display}</span>
+              <span style="font-size: 11px; color: ${isDone ? '#34d399' : '#64748b'}">${isDone ? 'تمت' : 'لم تُصلَّ'}</span>
+            </div>
+          </div>`;
+      });
+
+      document.getElementById('prayerProgress').innerText = `${done} / 5`;
+      document.getElementById('qadaCount').innerText = appData.qadaCount || 0;
+      document.getElementById('prayerAlertOffset').value = appData.prayerAlertOffset || 10;
+
+      const extras = appData.extrasHistory[selectedPrayerDate] || {};
+      document.getElementById('chkSunnah').checked = !!extras.sunnah;
+      document.getElementById('chkDuha').checked = !!extras.duha;
+      document.getElementById('chkWitr').checked = !!extras.witr;
+    }
+
+    function togglePrayer(k) {
+      appData.prayersHistory[selectedPrayerDate][k] = !appData.prayersHistory[selectedPrayerDate][k];
+      save();
+      renderPrayers();
+      renderPrayerChart();
+    }
+
+    function toggleExtra(t) {
+      if (!appData.extrasHistory[selectedPrayerDate]) appData.extrasHistory[selectedPrayerDate] = {};
+      appData.extrasHistory[selectedPrayerDate][t] = !appData.extrasHistory[selectedPrayerDate][t];
+      save();
+    }
+
+    function updateQada(d) {
+      appData.qadaCount = Math.max(0, (appData.qadaCount || 0) + d);
+      save();
+      document.getElementById('qadaCount').innerText = appData.qadaCount;
+    }
+
+    function saveAlertOffset(val) {
+      appData.prayerAlertOffset = parseInt(val) || 10;
+      save();
+    }
+
+    // رسم بياني لمعدل الالتزام بالصلوات آخر 30 يوماً
+    function renderPrayerChart() {
+      const svg = document.getElementById('prayerChartSvg');
+      svg.innerHTML = '';
+      
+      let totalPrayed = 0;
+      let totalPossible = 30 * 5;
+      const bars = [];
+
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dStr = getStandardDate(d);
+        const dayP = appData.prayersHistory[dStr] || {};
+        let dayCount = 0;
+        prayerKeys.forEach(k => { if (dayP[k]) dayCount++; });
+        totalPrayed += dayCount;
+        bars.push(dayCount);
+      }
+
+      const rate = Math.round((totalPrayed / totalPossible) * 100);
+      document.getElementById('prayerCommitRate').innerText = `${rate}%`;
+
+      const barWidth = 7;
+      const gap = 3;
+      bars.forEach((count, idx) => {
+        const height = (count / 5) * 60;
+        const x = idx * (barWidth + gap) + 5;
+        const y = 70 - height;
+        const color = count === 5 ? '#10b981' : count >= 3 ? '#38bdf8' : count > 0 ? '#f59e0b' : '#334155';
+        svg.innerHTML += `<rect x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="2" fill="${color}"><title>${count} / 5</title></rect>`;
+      });
+    }
+
+    // 5. الأذكار
+    const azkarSabah = [
+      { id: 's1', text: 'أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لا إِلَهَ إِلاَّ اللَّهُ.', count: 1 },
+      { id: 's2', text: 'اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ.', count: 1 },
+      { id: 's3', text: 'بِسْمِ اللَّهِ الَّذِي لا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلا فِي السَّمَاءِ.', count: 3 },
+      { id: 's4', text: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (مئة مرة)', count: 100 }
+    ];
+    const azkarMasa = [
+      { id: 'm1', text: 'أَمْسَيْنَا وَأَمْسَى المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لا إِلَهَ إِلاَّ اللَّهُ.', count: 1 },
+      { id: 'm2', text: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَإِلَيْكَ المَصِيرُ.', count: 1 },
+      { id: 'm3', text: 'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.', count: 3 },
+      { id: 'm4', text: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (مئة مرة)', count: 100 }
+    ];
+
+    let azkarMode = (new Date().getHours() >= 4 && new Date().getHours() < 15) ? 'sabah' : 'masa';
+    function setAzkarMode(mode) {
+      azkarMode = mode;
+      document.getElementById('btnAzkarSabah').className = (mode === 'sabah') ? 'active' : '';
+      document.getElementById('btnAzkarMasa').className = (mode === 'masa') ? 'active' : '';
+      document.getElementById('azkarModeTitle').innerText = (mode === 'sabah') ? 'أذكار الصباح' : 'أذكار المساء';
+      renderAzkar();
+    }
+    function renderAzkar() {
+      const container = document.getElementById('azkarContainer');
+      container.innerHTML = '';
+      const list = (azkarMode === 'sabah') ? azkarSabah : azkarMasa;
+      list.forEach(z => {
+        const left = (appData.azkar[z.id] !== undefined) ? appData.azkar[z.id] : z.count;
+        const done = left <= 0;
+        container.innerHTML += `
+          <div class="zekr-card ${done ? 'completed' : ''}" onclick="decrementZekr('${z.id}', ${z.count})">
+            <div class="zekr-text">${z.text}</div>
+            <div class="zekr-footer">
+              <span>${done ? '✔ اكتمل' : 'انقر للتسبيح'}</span>
+              <span class="counter-badge">${done ? 'تم' : left}</span>
+            </div>
+          </div>`;
+      });
+    }
+    function decrementZekr(id, count) {
+      let cur = (appData.azkar[id] !== undefined) ? appData.azkar[id] : count;
+      if (cur > 0) { appData.azkar[id] = cur - 1; save(); renderAzkar(); }
+    }
+
+    // 6. المهام (مع الفرز التلقائي لليوم ثم غداً ثم الأبعد + التأجيل الذكي + الإشعار)
+    function toggleCustomDate(v) {
+      const el = document.getElementById('taskCustomDate');
+      if (v === 'custom') { el.classList.remove('hidden'); el.value = todayDateStr; el.required = true; }
+      else { el.classList.add('hidden'); el.required = false; }
+    }
+
+    let taskFilter = 'all';
+    function filterTasks(f, btn) {
+      taskFilter = f;
+      document.querySelectorAll('.filter-tabs button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const el = document.getElementById('tasksList');
+      el.innerHTML = '';
+
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomStr = getStandardDate(tomorrow);
+
+      // الفرز التلقائي: مهام اليوم أولاً، ثم غداً، ثم التواريخ الأبعد
+      const sorted = [...appData.tasks].sort((a, b) => {
+        if (a.targetDate === b.targetDate) return 0;
+        return a.targetDate > b.targetDate ? 1 : -1;
+      });
+
+      const filtered = sorted.filter(t => {
+        if (taskFilter === 'all') return true;
+        if (taskFilter === 'today') return t.targetDate === todayDateStr;
+        if (taskFilter === 'tomorrow') return t.targetDate === tomStr;
+        return t.status === taskFilter;
+      });
+
+      if (filtered.length === 0) {
+        el.innerHTML = '<div style="text-align:center; color:#64748b; font-size:12px; padding:15px;">لا توجد مهام هنا</div>';
+        return;
+      }
+
+      const statusMap = { pending: 'مطلوبة', postponed: 'مؤجلة', completed: 'منجزة' };
+      const priorityMap = { high: 'priority-high', med: 'priority-med', low: 'priority-low' };
+
+      filtered.forEach(t => {
+        let dateLabel = t.targetDate;
+        if (t.targetDate === todayDateStr) dateLabel = 'اليوم';
+        else if (t.targetDate === tomStr) dateLabel = 'غداً';
+
+        el.innerHTML += `
+          <div class="list-row ${priorityMap[t.priority || 'med']}">
+            <div>
+              <div style="${t.status === 'completed' ? 'text-decoration:line-through; color:#64748b;' : 'font-weight:500;'}">
+                ${t.text}
+                ${t.alertTime ? `<span style="font-size:10px; color:#38bdf8; margin-right:4px;">⏰ ${t.alertTime}</span>` : ''}
+              </div>
+              <div style="margin-top:4px;">
+                <span class="date-badge">${dateLabel}</span>
+                <span class="badge badge-${t.status}">${statusMap[t.status]}</span>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:2px;">
+              ${t.status !== 'completed' ? `<button class="btn-action" title="إنجاز" onclick="setTaskStatus(${t.id}, 'completed')">✔</button>` : ''}
+              ${t.status !== 'completed' ? `<button class="btn-action" title="تأجيل للغد (+1 يوم)" onclick="postponeToTomorrow(${t.id})" style="color:#a855f7; font-weight:bold;">+1يوم</button>` : ''}
+              ${t.status === 'completed' ? `<button class="btn-action" title="إعادة للمطلوبة" onclick="setTaskStatus(${t.id}, 'pending')">↩</button>` : ''}
+              <button class="btn-action" title="حذف" onclick="deleteTask(${t.id})" style="color:#ef4444;">✕</button>
+            </div>
+          </div>`;
+      });
+    }
+
+    function addTask(e) {
+      e.preventDefault();
+      const text = document.getElementById('taskInput').value.trim();
+      const dayChoice = document.getElementById('taskDayChoice').value;
+      const priority = document.getElementById('taskPriority').value;
+      const alertTime = document.getElementById('taskAlertTime').value;
+      
+      let finalTargetDate = todayDateStr;
+      if (dayChoice === 'tomorrow') {
+        const tom = new Date();
+        tom.setDate(tom.getDate() + 1);
+        finalTargetDate = getStandardDate(tom);
+      } else if (dayChoice === 'custom') {
+        finalTargetDate = document.getElementById('taskCustomDate').value || todayDateStr;
+      }
+
+      appData.tasks.push({
+        id: Date.now(),
+        text,
+        createdAt: todayDateStr,
+        targetDate: finalTargetDate,
+        priority: priority,
+        alertTime: alertTime || null,
+        status: 'pending'
+      });
+
+      save();
+      renderTasks();
+      document.getElementById('taskInput').value = '';
+      document.getElementById('taskAlertTime').value = '';
+    }
+
+    // التأجيل الذكي بضغطة زر واحدة (+1 يوم)
+    function postponeToTomorrow(id) {
+      const t = appData.tasks.find(x => x.id === id);
+      if (t) {
+        const d = new Date(t.targetDate || todayDateStr);
+        d.setDate(d.getDate() + 1);
+        t.targetDate = getStandardDate(d);
+        t.status = 'postponed';
+        save();
+        renderTasks();
+      }
+    }
+
+    function setTaskStatus(id, st) {
+      const t = appData.tasks.find(x => x.id === id);
+      if (t) { t.status = st; save(); renderTasks(); }
+    }
+    function deleteTask(id) {
+      appData.tasks = appData.tasks.filter(x => x.id !== id);
+      save();
+      renderTasks();
+    }
+
+    // 7. المالية وسعر الصرف والرسم البياني
+    function updateExchangeRate(val) {
+      appData.usdRate = parseFloat(val) || 15000;
+      save();
+      renderFinance();
+    }
+
+    function toggleCategorySelect(val) {
+      document.getElementById('finCategory').style.display = (val === 'income') ? 'none' : 'block';
+    }
+
+    function renderFinance() {
+      const el = document.getElementById('transactionsList');
+      el.innerHTML = '';
+
+      let sypInc = 0, sypExp = 0;
+      let usdInc = 0, usdExp = 0;
+
+      appData.finances.slice().reverse().forEach((f, idx) => {
+        const realIdx = appData.finances.length - 1 - idx;
+        const cur = f.currency || 'SYP';
+
+        if (cur === 'USD') {
+          if (f.type === 'income') usdInc += f.amount; else usdExp += f.amount;
+        } else {
+          if (f.type === 'income') sypInc += f.amount; else sypExp += f.amount;
+        }
+
+        const symbol = cur === 'USD' ? '$' : 'ل.س';
+        el.innerHTML += `
+          <div class="list-row">
+            <div>
+              <div style="font-weight:500;">${f.note} <span style="font-size:10px; background:#1e293b; padding:1px 6px; border-radius:5px; color:#38bdf8;">${f.category || 'عام'}</span></div>
+              <div style="font-size:10px; color:#64748b;">${f.date} | ${symbol}</div>
+            </div>
+            <div>
+              <span style="font-weight:bold; margin-left:8px; color:${f.type === 'income' ? '#34d399' : '#f87171'}">
+                ${f.type === 'income' ? '+' : '-'}${f.amount.toLocaleString()} ${symbol}
+              </span>
+              <button class="btn-action" onclick="deleteFin(${realIdx})" style="color:#ef4444;">✕</button>
+            </div>
+          </div>`;
+      });
+
+      document.getElementById('sypIncome').innerText = sypInc.toLocaleString();
+      document.getElementById('sypExpense').innerText = sypExp.toLocaleString();
+      const sypNet = sypInc - sypExp;
+      document.getElementById('sypNet').innerText = sypNet.toLocaleString();
+      document.getElementById('sypNet').style.color = sypNet >= 0 ? '#38bdf8' : '#f87171';
+
+      document.getElementById('usdIncome').innerText = usdInc.toLocaleString();
+      document.getElementById('usdExpense').innerText = usdExp.toLocaleString();
+      const usdNet = usdInc - usdExp;
+      document.getElementById('usdNet').innerText = usdNet.toLocaleString();
+      document.getElementById('usdNet').style.color = usdNet >= 0 ? '#38bdf8' : '#f87171';
+
+      // حساب الميزانية الكلية بسعر الصرف
+      const rate = appData.usdRate || 15000;
+      document.getElementById('usdExchangeRate').value = rate;
+      const totalWealthSYP = sypNet + (usdNet * rate);
+      document.getElementById('totalEstimatedWealth').innerText = `${totalWealthSYP.toLocaleString()} ل.س`;
+
+      renderFinanceChart();
+    }
+
+    function addTransaction(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('finAmount').value);
+      const note = document.getElementById('finNote').value.trim();
+      const type = document.getElementById('finType').value;
+      const currency = document.getElementById('finCurrency').value;
+      const category = (type === 'income') ? 'دخل' : document.getElementById('finCategory').value;
+
+      appData.finances.push({
+        amount, note, type, currency, category,
+        date: `${todayDateStr} ${new Date().toLocaleTimeString('ar-SY', { hour: '2-digit', minute: '2-digit' })}`
+      });
+      save();
+      renderFinance();
+      document.getElementById('finAmount').value = '';
+      document.getElementById('finNote').value = '';
+    }
+    function deleteFin(idx) { appData.finances.splice(idx, 1); save(); renderFinance(); }
+
+    // رسم بياني لمصاريف الشهر
+    function renderFinanceChart() {
+      const svg = document.getElementById('financeChartSvg');
+      svg.innerHTML = '';
+
+      // جمع مصاريف آخر 15 يوماً
+      const days = [];
+      const now = new Date();
+      let maxExp = 1;
+
+      for (let i = 14; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(now.getDate() - i);
+        const dStr = getStandardDate(d);
+        
+        let sum = 0;
+        appData.finances.forEach(f => {
+          if (f.type === 'expense' && f.date.startsWith(dStr)) {
+            const amtSYP = (f.currency === 'USD') ? f.amount * (appData.usdRate || 15000) : f.amount;
+            sum += amtSYP;
+          }
+        });
+        if (sum > maxExp) maxExp = sum;
+        days.push({ day: d.getDate(), sum });
+      }
+
+      // رسم مسار المنحنى Polyline
+      let points = "";
+      const stepX = 280 / 14;
+      days.forEach((item, idx) => {
+        const x = idx * stepX + 10;
+        const y = 80 - ((item.sum / maxExp) * 65);
+        points += `${x},${y} `;
+        svg.innerHTML += `<circle cx="${x}" cy="${y}" r="2.5" fill="#f87171"><title>يوم ${item.day}: ${item.sum.toLocaleString()} ل.س</title></circle>`;
+      });
+
+      svg.innerHTML = `<polyline fill="none" stroke="#f87171" stroke-width="2" points="${points}"/>` + svg.innerHTML;
+    }
+
+    // 8. نظام التنبيهات المباشرة التلقائي
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) { alert("المتصفح لا يدعم التنبيهات."); return; }
+      Notification.requestPermission().then(p => {
+        if (p === 'granted') new Notification("مساعدي اليومي", { body: "تم تفعيل التنبيهات لشاشة القفل بنجاح!" });
+      });
+    }
+
+    function checkAutomatedNotifications(now, curM, pOrder) {
+      if (!("Notification" in window) || Notification.permission !== 'granted') return;
+
+      const offset = appData.prayerAlertOffset || 10;
+      // 1. تنبيه الصلاة المسبق
+      pOrder.forEach(p => {
+        if (p.total - curM === offset) {
+          new Notification("تنبيه الصلاة 🕌", { body: `اقترب موعد أذان ${p.name} (متبقي ${offset} دقائق)` });
+        }
+      });
+
+      // 2. تنبيه الأذكار
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      if (timeStr === "08:00") {
+        new Notification("أذكار الصباح ☀️", { body: "ابدأ يومك بذكر الله وتفقد أذكار الصباح" });
+      }
+      if (timeStr === "17:00") {
+        new Notification("أذكار المساء 🌙", { body: "حان الآن وقت أذكار المساء" });
+      }
+
+      // 3. تنبيه المهام المتبقية مساءً (الساعة 21:00)
+      if (timeStr === "21:00") {
+        const pendingCount = appData.tasks.filter(t => t.targetDate === todayDateStr && t.status !== 'completed').length;
+        if (pendingCount > 0) {
+          new Notification("تذكير المهام 📋", { body: `لديك ${pendingCount} مهام متبقية لليوم لم تُنجزها بعد!` });
+        }
+      }
+
+      // 4. تنبيه مخصص لكل مهمة محدد لها وقت
+      appData.tasks.forEach(t => {
+        if (t.targetDate === todayDateStr && t.status !== 'completed' && t.alertTime === timeStr) {
+          new Notification("تذكير بمهمة ⏰", { body: t.text });
+        }
+      });
+    }
+
+    // 9. التصدير المخصص لـ Excel (بدون حالة أو تاريخ وضع المهام)
+    function openExportModal() { document.getElementById('exportModal').classList.remove('hidden'); }
+    function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
+
+    function executeSelectedExport() {
+      const expTasks = document.getElementById('chkExpTasks').checked;
+      const expPrayers = document.getElementById('chkExpPrayers').checked;
+      const expFinance = document.getElementById('chkExpFinance').checked;
+
+      if (!expTasks && !expPrayers && !expFinance) {
+        alert('يرجى تحديد خيار واحد على الأقل!');
+        return;
+      }
+      closeExportModal();
+
+      let excelHTML = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+          body { font-family: Tahoma, Arial, sans-serif; direction: rtl; }
+          table { border-collapse: collapse; margin-bottom: 25px; width: 100%; }
+          th { background-color: #0284c7; color: #ffffff; border: 1px solid #94a3b8; padding: 10px; font-size: 13px; }
+          td { border: 1px solid #cbd5e1; padding: 8px; text-align: center; font-size: 12px; }
+          .title-row { background-color: #0f172a; color: #38bdf8; font-size: 15px; font-weight: bold; text-align: right; padding: 12px; }
+          .summary-header { background-color: #334155; color: #ffffff; font-weight: bold; }
+          .highlight { font-weight: bold; font-size: 13px; }
+        </style>
+      </head>
+      <body>`;
+
+      // 1. المهام: تم حذف الحالة وتاريخ الوضع تماماً بناءً على طلبك
+      if (expTasks) {
+        const pMap = { high: 'عاجلة ⚡', med: 'مهمة', low: 'عادية' };
+        const nonCompleted = appData.tasks
+          .filter(t => t.status === 'pending' || t.status === 'postponed')
+          .sort((a, b) => a.targetDate > b.targetDate ? 1 : -1);
+
+        excelHTML += `
+          <table>
+            <tr><td colspan="3" class="title-row">📌 جدول المهام المطلوب إنجازها (مرتبة بالأولوية والموعد)</td></tr>
+            <tr>
+              <th>المهمة</th>
+              <th>الأولوية</th>
+              <th>تاريخ الإنجاز المطلوب</th>
+            </tr>`;
+
+        if (nonCompleted.length === 0) {
+          excelHTML += `<tr><td colspan="3" style="color: #64748b;">لا توجد مهام مطلوبة حالياً</td></tr>`;
+        } else {
+          nonCompleted.forEach(t => {
+            excelHTML += `
+              <tr>
+                <td style="text-align: right;">${t.text}</td>
+                <td>${pMap[t.priority || 'med']}</td>
+                <td><b>${t.targetDate}</b></td>
+              </tr>`;
+          });
+        }
+        excelHTML += `</table>`;
+      }
+
+      // 2. الصلوات مع إجمالي المصلاة والفائتة
+      if (expPrayers) {
+        let totalPrayed = 0, totalMissed = 0;
+        Object.keys(appData.prayersHistory).forEach(d => {
+          const dayP = appData.prayersHistory[d];
+          prayerKeys.forEach(k => {
+            if (dayP[k]) totalPrayed++; else totalMissed++;
+          });
+        });
+        const totalAll = totalPrayed + totalMissed;
+        const commitRate = totalAll > 0 ? Math.round((totalPrayed / totalAll) * 100) : 0;
+
+        excelHTML += `
+          <table>
+            <tr><td colspan="3" class="title-row">🕌 إحصائيات وسجل الصلوات</td></tr>
+            <tr class="summary-header"><td>إجمالي الصلوات المصلاة</td><td>إجمالي الصلوات الفائتة</td><td>نسبة الالتزام الإجمالية</td></tr>
+            <tr><td class="highlight" style="color: #059669;">${totalPrayed} صلاة تمت</td><td class="highlight" style="color: #dc2626;">${totalMissed} صلاة فائتة</td><td class="highlight" style="color: #0284c7;">${commitRate}%</td></tr>
+          </table>
+          <table>
+            <tr><th>التاريخ</th><th>الصلاة</th><th>الحالة</th></tr>`;
+        Object.keys(appData.prayersHistory).forEach(d => {
+          const dayP = appData.prayersHistory[d];
+          prayerKeys.forEach(k => {
+            excelHTML += `<tr><td>${d}</td><td>${damascusTimes[k].name}</td><td style="color:${dayP[k] ? '#059669' : '#dc2626'}; font-weight:bold;">${dayP[k] ? 'تمت' : 'فائتة'}</td></tr>`;
+          });
+        });
+        excelHTML += `</table>`;
+      }
+
+      // 3. المالية مع المجاميع وسعر الصرف
+      if (expFinance) {
+        let sypInc = 0, sypExp = 0, usdInc = 0, usdExp = 0;
+        appData.finances.forEach(f => {
+          const cur = f.currency || 'SYP';
+          if (cur === 'USD') {
+            if (f.type === 'income') usdInc += f.amount; else usdExp += f.amount;
+          } else {
+            if (f.type === 'income') sypInc += f.amount; else sypExp += f.amount;
+          }
+        });
+
+        const rate = appData.usdRate || 15000;
+        const totalNetSYP = (sypInc - sypExp) + ((usdInc - usdExp) * rate);
+
+        excelHTML += `
+          <table>
+            <tr><td colspan="4" class="title-row">💰 الملخص المالي ومجموع الميزانية</td></tr>
+            <tr class="summary-header"><td>العملة</td><td>مجموع المكتسب</td><td>مجموع المصاريف</td><td>الصافي المتبقي</td></tr>
+            <tr><td><b>الليرة السورية (ل.س)</b></td><td class="highlight" style="color: #059669;">+${sypInc.toLocaleString()} ل.س</td><td class="highlight" style="color: #dc2626;">-${sypExp.toLocaleString()} ل.س</td><td class="highlight" style="color: #0284c7;">${(sypInc - sypExp).toLocaleString()} ل.س</td></tr>
+            <tr><td><b>الدولار الأمريكي ($)</b></td><td class="highlight" style="color: #059669;">+${usdInc.toLocaleString()} $</td><td class="highlight" style="color: #dc2626;">-${usdExp.toLocaleString()} $</td><td class="highlight" style="color: #0284c7;">${(usdInc - usdExp).toLocaleString()} $</td></tr>
+            <tr style="background:#f1f5f9;"><td colspan="4"><b>إجمالي الثروة التقديرية بالليرة السورية (سعر الصرف ${rate.toLocaleString()}): ${totalNetSYP.toLocaleString()} ل.س</b></td></tr>
+          </table>
+          <table>
+            <tr><th>البيان</th><th>الفئة</th><th>النوع</th><th>المبلغ</th><th>العملة</th><th>التاريخ والوقت</th></tr>`;
+        appData.finances.forEach(f => {
+          excelHTML += `<tr><td style="text-align: right;">${f.note}</td><td>${f.category || 'عام'}</td><td>${f.type === 'income' ? 'دخل' : 'مصروف'}</td><td><b>${f.amount.toLocaleString()}</b></td><td>${f.currency === 'USD' ? 'دولار ($)' : 'ليرة سورية (ل.س)'}</td><td>${f.date}</td></tr>`;
+        });
+        excelHTML += `</table>`;
+      }
+
+      excelHTML += `</body></html>`;
+      const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `تقرير_مساعدي_اليومي_${todayDateStr}.xls`;
+      a.click();
+    }
+
+    // تشغيل أولي
+    updateClockAndCountdown();
+    setAzkarMode(azkarMode);
+    renderPrayers();
+    renderTasks();
+    renderFinance();
+  </script>
+</body>
+</html>
