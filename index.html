@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>مساعدي اليومي</title>
   <meta name="theme-color" content="#0b1120">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%22%2C%22short_name%22%3A%22%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D9%8A%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b1120%22%2C%22theme_color%22%3A%22%230b1120%22%7D">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Tahoma, Arial, sans-serif; }
     body { background-color: #0b1120; color: #f8fafc; display: flex; justify-content: center; padding: 12px; min-height: 100vh; }
@@ -30,7 +27,7 @@
     .btn-submit { width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px; }
     .btn-submit:active { background: #0369a1; }
 
-    /* Prayers */
+    /* الصلوات */
     .prayer-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-radius: 10px; margin-bottom: 6px; border: 1px solid #334155; background: #0b1120; }
     .prayer-row.done { background: rgba(16, 185, 129, 0.15); border-color: #10b981; }
     .prayer-time { font-size: 12px; color: #94a3b8; font-weight: bold; }
@@ -38,7 +35,7 @@
     .qada-box { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
     .counter-btn { width: 28px; height: 28px; background: #334155; border: none; color: #fff; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-    /* Azkar */
+    /* الأذكار */
     .azkar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .azkar-switch { display: flex; gap: 6px; }
     .azkar-switch button { padding: 5px 10px; font-size: 11px; border-radius: 8px; border: 1px solid #334155; background: #0b1120; color: #94a3b8; cursor: pointer; }
@@ -50,7 +47,7 @@
     .counter-badge { background: #38bdf8; color: #0b1120; font-weight: bold; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
     .zekr-card.completed .counter-badge { background: #10b981; color: #fff; }
 
-    /* Tasks */
+    /* المهام */
     .filter-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
     .filter-tabs button { flex: 1; padding: 6px 2px; font-size: 11px; background: #0b1120; border: 1px solid #334155; color: #94a3b8; border-radius: 8px; cursor: pointer; }
     .filter-tabs button.active { background: #334155; color: #fff; border-color: #475569; font-weight: bold; }
@@ -70,7 +67,7 @@
     .btn-action { background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px 6px; font-size: 12px; border-radius: 5px; }
     .btn-action:hover { background: #334155; color: #fff; }
 
-    /* Finance */
+    /* المالية */
     .finance-card { background: #0b1120; border-radius: 12px; padding: 10px; border: 1px solid #334155; margin-bottom: 8px; }
     .currency-title { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; text-align: center; }
     .balance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; text-align: center; }
@@ -80,7 +77,7 @@
 
     .total-wealth-box { background: linear-gradient(135deg, #0284c7, #0369a1); border-radius: 12px; padding: 10px 14px; color: #fff; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-    /* Charts Area */
+    /* الرسوم البيانية */
     .chart-container { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-top: 10px; }
     .chart-title { font-size: 12px; color: #94a3b8; margin-bottom: 8px; font-weight: bold; }
     svg { display: block; width: 100%; height: 110px; }
@@ -98,10 +95,9 @@
 
   <div class="container">
     
-    <!-- Header -->
     <header>
       <div id="liveClock" class="clock">12:00:00</div>
-      <div id="liveDate" class="date-str">جارٍ تحميل الوقت...</div>
+      <div id="liveDate" class="date-str">جارٍ التحميل...</div>
       
       <div class="prayer-banner">
         <span>🕌 الصلاة القادمة: <b id="nextPrayerName">--</b></span>
@@ -109,7 +105,6 @@
       </div>
     </header>
 
-    <!-- Navigation Tabs -->
     <div class="nav-tabs">
       <button class="active" onclick="switchTab('prayers', this)">الصلوات</button>
       <button onclick="switchTab('azkar', this)">الأذكار</button>
@@ -117,14 +112,13 @@
       <button onclick="switchTab('finance', this)">المالية</button>
     </div>
 
-    <!-- 1. PRAYERS TAB -->
+    <!-- 1. الصلوات -->
     <div id="tab-prayers" class="card">
       <div class="card-title">
         <span>صلوات اليوم</span>
         <span id="prayerProgress" style="color: #38bdf8;">0 / 5</span>
       </div>
 
-      <!-- تصفح الأيام السابقة (الأرشيف) -->
       <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 10px;">
         <span style="font-size: 11px; color: #94a3b8;">عرض يوم:</span>
         <input type="date" id="prayerArchiveDate" onchange="loadPrayersForDate(this.value)" style="margin: 0; padding: 6px 10px;">
@@ -132,7 +126,6 @@
 
       <div id="prayersList"></div>
 
-      <!-- ضبط تنبيه الصلاة المسبق -->
       <div style="display:flex; justify-content:space-between; align-items:center; background:#0b1120; padding:8px 12px; border-radius:10px; border:1px solid #334155; margin-top:8px; font-size:12px;">
         <span>تنبيه قبل الصلاة بـ:</span>
         <select id="prayerAlertOffset" onchange="saveAlertOffset(this.value)" style="width:110px; margin:0; padding:4px 8px;">
@@ -143,7 +136,6 @@
         </select>
       </div>
 
-      <!-- السنن -->
       <div class="extra-prayers">
         <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
           <input type="checkbox" id="chkSunnah" onchange="toggleExtra('sunnah')" style="width:16px; height:16px; margin:0; accent-color:#38bdf8;">
@@ -159,7 +151,6 @@
         </label>
       </div>
 
-      <!-- قضاء الصلوات -->
       <div class="qada-box">
         <div>
           <span style="font-size:12px; font-weight:bold; display:block;">صلوات بذمتي (قضاء):</span>
@@ -172,14 +163,13 @@
         </div>
       </div>
 
-      <!-- الرسم البياني للالتزام بالصلوات آخر 30 يوماً -->
       <div class="chart-container">
         <div class="chart-title">📊 نسبة الالتزام بالصلوات آخر 30 يوماً (<span id="prayerCommitRate">0%</span>)</div>
         <svg id="prayerChartSvg" viewBox="0 0 300 80"></svg>
       </div>
     </div>
 
-    <!-- 2. AZKAR TAB -->
+    <!-- 2. الأذكار -->
     <div id="tab-azkar" class="card hidden">
       <div class="azkar-header">
         <span id="azkarModeTitle" style="font-weight: bold; color: #38bdf8;">أذكار الصباح</span>
@@ -191,7 +181,7 @@
       <div class="item-list" id="azkarContainer" style="max-height: 380px;"></div>
     </div>
 
-    <!-- 3. TASKS TAB -->
+    <!-- 3. المهام -->
     <div id="tab-tasks" class="hidden">
       <div class="card">
         <form onsubmit="addTask(event)">
@@ -209,7 +199,6 @@
               <option value="low">أولوية: عادية</option>
             </select>
           </div>
-          <!-- وقت الإشعار للمهمة -->
           <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
             <span style="font-size: 11px; color: #94a3b8; white-space: nowrap;">⏰ إشعار تنبيه:</span>
             <input type="time" id="taskAlertTime" style="margin: 0;">
@@ -230,11 +219,10 @@
       </div>
     </div>
 
-    <!-- 4. FINANCE TAB -->
+    <!-- 4. المالية -->
     <div id="tab-finance" class="hidden">
       <div class="card">
         
-        <!-- بطاقة الثروة الكلية وسعر الصرف -->
         <div class="total-wealth-box">
           <div>
             <span style="font-size: 11px; opacity: 0.9; display: block;">إجمالي الميزانية التقديرية (ل.س):</span>
@@ -246,7 +234,6 @@
           </div>
         </div>
 
-        <!-- سوري -->
         <div class="finance-card">
           <div class="currency-title">🇸🇾 الليرة السورية (ل.س)</div>
           <div class="balance-grid">
@@ -256,7 +243,6 @@
           </div>
         </div>
 
-        <!-- دولار -->
         <div class="finance-card">
           <div class="currency-title">💵 الدولار الأمريكي ($)</div>
           <div class="balance-grid">
@@ -266,7 +252,6 @@
           </div>
         </div>
 
-        <!-- إضافة حركة -->
         <form onsubmit="addTransaction(event)">
           <div style="display: flex; gap: 6px;">
             <select id="finType" style="flex: 1;" onchange="toggleCategorySelect(this.value)">
@@ -295,7 +280,6 @@
           <button type="submit" class="btn-submit">+ تسجيل الحركة المالية</button>
         </form>
 
-        <!-- رسم بياني لمصاريف الشهر -->
         <div class="chart-container">
           <div class="chart-title">📈 حركة المصاريف اليومية (خلال الشهر)</div>
           <svg id="financeChartSvg" viewBox="0 0 300 90"></svg>
@@ -309,7 +293,7 @@
       </div>
     </div>
 
-    <!-- أزرار التصدير والتنبيهات والنسخ الاحتياطي -->
+    <!-- أزرار التصدير -->
     <div style="display:flex; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap;">
       <button onclick="requestNotificationPermission()" class="btn-action" style="background:#1e293b; border:1px solid #334155; padding:8px 14px; border-radius:10px;">
         🔔 تفعيل التنبيهات
@@ -321,7 +305,7 @@
 
   </div>
 
-  <!-- Modal خيارات التصدير -->
+  <!-- Modal التصدير -->
   <div id="exportModal" class="modal-overlay hidden">
     <div class="modal-content">
       <h3 style="font-size: 15px; margin-bottom: 14px; color: #38bdf8; text-align: center;">اختر ما ترغب بتصديره إلى Excel:</h3>
@@ -349,24 +333,13 @@
   </div>
 
   <script>
-    // --- محرك العمل بدون إنترنت (Offline Service Worker via Blob) ---
-    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-      const swCode = `
-        const CACHE_NAME = 'daily-tracker-v1';
-        self.addEventListener('install', (e) => {
-          self.skipWaiting();
-        });
-        self.addEventListener('activate', (e) => {
-          e.waitUntil(clients.claim());
-        });
-        self.addEventListener('fetch', (e) => {
-          e.respondWith(
-            fetch(e.request).catch(() => caches.match(e.request))
-          );
-        });
-      `;
-      const blob = new Blob([swCode], { type: 'application/javascript' });
-      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    // إلغاء أي Service Worker قديم عالق يسبب بطء التحميل
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      }).catch(() => {});
     }
 
     // 1. مواقيت دمشق المعتمدة
@@ -1041,7 +1014,7 @@
       a.click();
     }
 
-    // تشغيل أولي
+    // تشغيل أولي سريع وفوري
     updateClockAndCountdown();
     setAzkarMode(azkarMode);
     renderPrayers();
