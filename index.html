@@ -3,91 +3,596 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مساعدي اليومي</title>
-  <meta name="theme-color" content="#0b1120">
+  <title>مساعدي اليومي - Claymorphism</title>
+  <meta name="theme-color" content="#e0e7ff">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Tahoma, Arial, sans-serif; }
-    body { background-color: #0b1120; color: #f8fafc; display: flex; justify-content: center; padding: 12px; min-height: 100vh; }
-    .container { width: 100%; max-width: 520px; padding-bottom: 30px; }
-    
-    header { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 14px; text-align: center; margin-bottom: 12px; }
-    .clock { font-size: 26px; font-weight: 800; color: #38bdf8; font-variant-numeric: tabular-nums; }
-    .date-str { font-size: 13px; color: #94a3b8; margin-top: 3px; font-weight: 500; }
-    .prayer-banner { margin-top: 10px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 10px; padding: 8px 12px; font-size: 13px; color: #7dd3fc; display: flex; justify-content: space-between; align-items: center; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", Tahoma, sans-serif; 
+    }
 
-    .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); background: #1e293b; border-radius: 14px; padding: 4px; margin-bottom: 12px; border: 1px solid #334155; gap: 4px; }
-    .nav-tabs button { padding: 9px 2px; background: transparent; border: none; color: #94a3b8; font-size: 13px; cursor: pointer; border-radius: 10px; transition: 0.2s; font-weight: 600; }
-    .nav-tabs button.active { background: #38bdf8; color: #0b1120; font-weight: bold; }
+    /* خلفية ناعمة باستيلية تبرز مجسمات الطين */
+    body { 
+      background-color: #e0e7ff; 
+      color: #1e293b; 
+      display: flex; 
+      justify-content: center; 
+      padding: 16px; 
+      min-height: 100vh; 
+    }
 
-    .card { background: #1e293b; border-radius: 16px; padding: 14px; border: 1px solid #334155; margin-bottom: 12px; }
-    .card-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: #e2e8f0; }
+    .container { 
+      width: 100%; 
+      max-width: 520px; 
+      padding-bottom: 35px; 
+    }
 
-    input, select { width: 100%; padding: 9px 12px; background: #0b1120; border: 1px solid #334155; border-radius: 10px; color: #fff; margin-bottom: 8px; font-size: 13px; outline: none; }
-    input:focus, select:focus { border-color: #38bdf8; }
-    .btn-submit { width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    .btn-submit:active { background: #0369a1; }
+    /* قواعد نمط Claymorphism للبطاقات والأزرار */
+    .clay-card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 
+        0 18px 32px rgba(100, 116, 139, 0.16),
+        inset 0 -8px 14px rgba(148, 163, 184, 0.25),
+        inset 0 8px 16px rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
 
-    /* الصلوات */
-    .prayer-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-radius: 10px; margin-bottom: 6px; border: 1px solid #334155; background: #0b1120; }
-    .prayer-row.done { background: rgba(16, 185, 129, 0.15); border-color: #10b981; }
-    .prayer-time { font-size: 12px; color: #94a3b8; font-weight: bold; }
-    .extra-prayers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #334155; font-size: 12px; }
-    .qada-box { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-    .counter-btn { width: 28px; height: 28px; background: #334155; border: none; color: #fff; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    /* الرأس الطيني الباستيلي */
+    header.clay-card {
+      background: #f1f5f9;
+      text-align: center;
+      padding: 20px 16px;
+    }
+
+    .clock { 
+      font-size: 28px; 
+      font-weight: 900; 
+      color: #0369a1; 
+      font-variant-numeric: tabular-nums; 
+      letter-spacing: -0.5px;
+    }
+
+    .date-str { 
+      font-size: 13px; 
+      color: #475569; 
+      margin-top: 4px; 
+      font-weight: 700; 
+    }
+
+    .prayer-banner { 
+      margin-top: 12px; 
+      background: #dbeafe; 
+      border-radius: 20px; 
+      padding: 10px 14px; 
+      font-size: 13px; 
+      color: #1e40af; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      font-weight: 700;
+      box-shadow: 
+        0 8px 16px rgba(191, 219, 254, 0.4),
+        inset 0 -4px 8px rgba(147, 197, 253, 0.35),
+        inset 0 4px 8px rgba(255, 255, 255, 0.8);
+    }
+
+    /* شريط التبويبات الطيني */
+    .nav-tabs { 
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      background: #f8fafc; 
+      border-radius: 24px; 
+      padding: 6px; 
+      margin-bottom: 16px; 
+      gap: 6px; 
+      box-shadow: 
+        0 12px 24px rgba(148, 163, 184, 0.2),
+        inset 0 -4px 8px rgba(203, 213, 225, 0.4),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
+    }
+
+    .nav-tabs button { 
+      padding: 11px 4px; 
+      background: transparent; 
+      border: none; 
+      color: #64748b; 
+      font-size: 13px; 
+      cursor: pointer; 
+      border-radius: 18px; 
+      transition: all 0.2s ease; 
+      font-weight: 800; 
+    }
+
+    .nav-tabs button.active { 
+      background: #38bdf8; 
+      color: #0c4a6e; 
+      box-shadow: 
+        0 8px 16px rgba(56, 189, 248, 0.35),
+        inset 0 -4px 8px rgba(2, 132, 199, 0.25),
+        inset 0 4px 8px rgba(255, 255, 255, 0.8);
+    }
+
+    .card-title { 
+      font-size: 15px; 
+      font-weight: 900; 
+      margin-bottom: 14px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      color: #0f172a; 
+    }
+
+    /* المدخلات والقوائم المنسدلة الطينية المقعرة */
+    input, select { 
+      width: 100%; 
+      padding: 12px 14px; 
+      background: #f8fafc; 
+      border: 1px solid rgba(226, 232, 240, 0.8); 
+      border-radius: 20px; 
+      color: #0f172a; 
+      margin-bottom: 10px; 
+      font-size: 13px; 
+      font-weight: 700;
+      outline: none; 
+      box-shadow: 
+        inset 0 4px 8px rgba(148, 163, 184, 0.15),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.9);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus { 
+      border-color: #38bdf8; 
+      box-shadow: 
+        0 0 0 3px rgba(56, 189, 248, 0.25),
+        inset 0 3px 6px rgba(148, 163, 184, 0.1);
+    }
+
+    /* الأزرار الطينية المكتنزة (Chunky Clay Buttons) */
+    .btn-submit { 
+      width: 100%; 
+      padding: 12px; 
+      background: #0284c7; 
+      color: #ffffff; 
+      border: none; 
+      border-radius: 22px; 
+      font-weight: 900; 
+      cursor: pointer; 
+      font-size: 14px; 
+      box-shadow: 
+        0 10px 20px rgba(2, 132, 199, 0.3),
+        inset 0 -5px 10px rgba(3, 105, 161, 0.4),
+        inset 0 5px 10px rgba(255, 255, 255, 0.5);
+      transition: all 0.15s ease;
+    }
+
+    .btn-submit:active { 
+      transform: translateY(2px);
+      box-shadow: 
+        0 4px 10px rgba(2, 132, 199, 0.3),
+        inset 0 -2px 6px rgba(3, 105, 161, 0.5),
+        inset 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* صفوف الصلوات الطينية */
+    .prayer-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 12px 14px; 
+      border-radius: 20px; 
+      margin-bottom: 8px; 
+      background: #f8fafc; 
+      box-shadow: 
+        0 6px 14px rgba(148, 163, 184, 0.12),
+        inset 0 -4px 8px rgba(203, 213, 225, 0.3),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
+      transition: all 0.2s;
+    }
+
+    .prayer-row.done { 
+      background: #dcfce7; 
+      color: #14532d;
+      box-shadow: 
+        0 8px 16px rgba(187, 247, 208, 0.5),
+        inset 0 -4px 8px rgba(134, 239, 172, 0.35),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
+    }
+
+    .prayer-time { 
+      font-size: 12px; 
+      color: #475569; 
+      font-weight: 800; 
+    }
+
+    .extra-prayers { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px; 
+      margin-top: 14px; 
+      padding-top: 12px; 
+      border-top: 2px dashed #cbd5e1; 
+      font-size: 13px; 
+      font-weight: 700;
+    }
+
+    .qada-box { 
+      background: #fee2e2; 
+      border-radius: 22px; 
+      padding: 12px 16px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-top: 14px; 
+      box-shadow: 
+        0 8px 16px rgba(254, 202, 202, 0.4),
+        inset 0 -4px 8px rgba(252, 165, 165, 0.3),
+        inset 0 4px 8px rgba(255, 255, 255, 0.85);
+    }
+
+    .counter-btn { 
+      width: 32px; 
+      height: 32px; 
+      background: #ffffff; 
+      border: none; 
+      color: #991b1b; 
+      border-radius: 12px; 
+      font-weight: 900; 
+      font-size: 16px;
+      cursor: pointer; 
+      box-shadow: 
+        0 4px 8px rgba(153, 27, 27, 0.15),
+        inset 0 -2px 4px rgba(203, 213, 225, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.9);
+    }
+
+    .counter-btn:active {
+      transform: translateY(1px);
+    }
 
     /* الأذكار */
-    .azkar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .azkar-switch { display: flex; gap: 6px; }
-    .azkar-switch button { padding: 5px 10px; font-size: 11px; border-radius: 8px; border: 1px solid #334155; background: #0b1120; color: #94a3b8; cursor: pointer; }
-    .azkar-switch button.active { background: #0284c7; color: #fff; border-color: #0284c7; }
-    .zekr-card { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 8px; cursor: pointer; }
-    .zekr-card.completed { border-color: #10b981; background: rgba(16, 185, 129, 0.08); opacity: 0.65; }
-    .zekr-text { font-size: 13px; line-height: 1.6; color: #e2e8f0; margin-bottom: 8px; }
-    .zekr-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
-    .counter-badge { background: #38bdf8; color: #0b1120; font-weight: bold; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
-    .zekr-card.completed .counter-badge { background: #10b981; color: #fff; }
+    .azkar-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 14px; 
+    }
+
+    .azkar-switch { 
+      display: flex; 
+      gap: 6px; 
+    }
+
+    .azkar-switch button { 
+      padding: 6px 12px; 
+      font-size: 12px; 
+      border-radius: 16px; 
+      border: none; 
+      background: #f1f5f9; 
+      color: #64748b; 
+      cursor: pointer; 
+      font-weight: 800;
+      box-shadow: 
+        0 4px 8px rgba(148, 163, 184, 0.15),
+        inset 0 -2px 4px rgba(203, 213, 225, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+
+    .azkar-switch button.active { 
+      background: #0284c7; 
+      color: #fff; 
+      box-shadow: 
+        0 6px 12px rgba(2, 132, 199, 0.3),
+        inset 0 -3px 6px rgba(3, 105, 161, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.6);
+    }
+
+    .zekr-card { 
+      background: #ffffff; 
+      border-radius: 22px; 
+      padding: 14px; 
+      margin-bottom: 10px; 
+      cursor: pointer; 
+      box-shadow: 
+        0 8px 18px rgba(148, 163, 184, 0.12),
+        inset 0 -4px 8px rgba(203, 213, 225, 0.25),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
+      transition: all 0.15s ease;
+    }
+
+    .zekr-card:active {
+      transform: scale(0.98);
+    }
+
+    .zekr-card.completed { 
+      background: #f0fdf4; 
+      opacity: 0.7; 
+      box-shadow: 
+        0 4px 8px rgba(187, 247, 208, 0.2),
+        inset 0 -2px 4px rgba(134, 239, 172, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+
+    .zekr-text { 
+      font-size: 14px; 
+      line-height: 1.6; 
+      color: #1e293b; 
+      margin-bottom: 8px; 
+      font-weight: 700;
+    }
+
+    .zekr-footer { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      font-size: 12px; 
+      color: #64748b; 
+      font-weight: 700;
+    }
+
+    .counter-badge { 
+      background: #bae6fd; 
+      color: #0369a1; 
+      font-weight: 900; 
+      padding: 4px 12px; 
+      border-radius: 16px; 
+      font-size: 13px; 
+      box-shadow: 
+        0 4px 8px rgba(186, 230, 253, 0.4),
+        inset 0 -2px 4px rgba(125, 211, 252, 0.35),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+
+    .zekr-card.completed .counter-badge { 
+      background: #86efac; 
+      color: #14532d; 
+    }
 
     /* المهام */
-    .filter-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-    .filter-tabs button { flex: 1; padding: 6px 2px; font-size: 11px; background: #0b1120; border: 1px solid #334155; color: #94a3b8; border-radius: 8px; cursor: pointer; }
-    .filter-tabs button.active { background: #334155; color: #fff; border-color: #475569; font-weight: bold; }
+    .filter-tabs { 
+      display: flex; 
+      gap: 6px; 
+      margin-bottom: 12px; 
+    }
+
+    .filter-tabs button { 
+      flex: 1; 
+      padding: 7px 2px; 
+      font-size: 12px; 
+      background: #f1f5f9; 
+      border: none; 
+      color: #64748b; 
+      border-radius: 16px; 
+      cursor: pointer; 
+      font-weight: 800;
+      box-shadow: 
+        0 4px 8px rgba(148, 163, 184, 0.12),
+        inset 0 -2px 4px rgba(203, 213, 225, 0.25),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+
+    .filter-tabs button.active { 
+      background: #0f172a; 
+      color: #ffffff; 
+      box-shadow: 
+        0 6px 12px rgba(15, 23, 42, 0.25),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.3);
+    }
     
-    .priority-high { border-right: 4px solid #ef4444 !important; }
-    .priority-med { border-right: 4px solid #f59e0b !important; }
-    .priority-low { border-right: 4px solid #38bdf8 !important; }
+    .priority-high { 
+      background: #fff1f2 !important; 
+      border-right: 6px solid #f43f5e !important; 
+    }
+    .priority-med { 
+      background: #fffbeb !important; 
+      border-right: 6px solid #f59e0b !important; 
+    }
+    .priority-low { 
+      background: #f0f9ff !important; 
+      border-right: 6px solid #38bdf8 !important; 
+    }
 
-    .badge { font-size: 10px; padding: 2px 6px; border-radius: 5px; display: inline-block; }
-    .badge-pending { background: #78350f; color: #fde68a; }
-    .badge-postponed { background: #581c87; color: #e9d5ff; }
-    .badge-completed { background: #064e3b; color: #a7f3d0; }
-    .date-badge { font-size: 10px; background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 1px 6px; border-radius: 5px; }
+    .badge { 
+      font-size: 11px; 
+      padding: 3px 8px; 
+      border-radius: 12px; 
+      display: inline-block; 
+      font-weight: 800;
+    }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+    .badge-postponed { background: #f3e8ff; color: #6b21a8; }
+    .badge-completed { background: #dcfce7; color: #166534; }
+    .date-badge { 
+      font-size: 11px; 
+      background: #ffffff; 
+      color: #0284c7; 
+      padding: 2px 8px; 
+      border-radius: 12px; 
+      font-weight: 800;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
-    .item-list { max-height: 320px; overflow-y: auto; }
-    .list-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #0b1120; border-radius: 10px; margin-bottom: 8px; font-size: 13px; border: 1px solid #334155; }
-    .list-row.is-completed { opacity: 0.55; background: #080d1a; }
-    .btn-action { background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px 6px; font-size: 12px; border-radius: 5px; }
-    .btn-action:hover { background: #334155; color: #fff; }
+    .item-list { max-height: 330px; overflow-y: auto; }
+
+    .list-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 12px 14px; 
+      background: #ffffff; 
+      border-radius: 20px; 
+      margin-bottom: 8px; 
+      font-size: 13px; 
+      box-shadow: 
+        0 6px 14px rgba(148, 163, 184, 0.12),
+        inset 0 -3px 6px rgba(203, 213, 225, 0.2),
+        inset 0 3px 6px rgba(255, 255, 255, 0.9);
+    }
+
+    .list-row.is-completed { 
+      opacity: 0.55; 
+      background: #f8fafc !important; 
+      border-right: none !important;
+    }
+
+    .btn-action { 
+      background: #ffffff; 
+      border: none; 
+      color: #475569; 
+      cursor: pointer; 
+      padding: 6px 9px; 
+      font-size: 12px; 
+      border-radius: 14px; 
+      font-weight: 800;
+      box-shadow: 
+        0 4px 8px rgba(148, 163, 184, 0.15),
+        inset 0 -2px 4px rgba(203, 213, 225, 0.25),
+        inset 0 2px 4px rgba(255, 255, 255, 0.9);
+      transition: all 0.1s;
+    }
+
+    .btn-action:active { 
+      transform: translateY(1px); 
+    }
 
     /* المالية */
-    .finance-card { background: #0b1120; border-radius: 12px; padding: 10px; border: 1px solid #334155; margin-bottom: 8px; }
-    .currency-title { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; text-align: center; }
-    .balance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; text-align: center; }
-    .balance-box { background: #1e293b; padding: 6px; border-radius: 8px; }
-    .balance-box span { font-size: 10px; color: #94a3b8; display: block; margin-bottom: 2px; }
-    .balance-box strong { font-size: 13px; }
+    .finance-subcard { 
+      background: #f8fafc; 
+      border-radius: 22px; 
+      padding: 12px; 
+      margin-bottom: 10px; 
+      box-shadow: 
+        0 8px 16px rgba(148, 163, 184, 0.1),
+        inset 0 -4px 8px rgba(203, 213, 225, 0.2),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
+    }
 
-    .total-wealth-box { background: linear-gradient(135deg, #0284c7, #0369a1); border-radius: 12px; padding: 10px 14px; color: #fff; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .currency-title { 
+      font-size: 13px; 
+      font-weight: 900; 
+      color: #0369a1; 
+      margin-bottom: 8px; 
+      text-align: center; 
+    }
+
+    .balance-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr 1fr; 
+      gap: 6px; 
+      text-align: center; 
+    }
+
+    .balance-box { 
+      background: #ffffff; 
+      padding: 8px 4px; 
+      border-radius: 16px; 
+      box-shadow: 
+        0 4px 8px rgba(148, 163, 184, 0.08),
+        inset 0 -2px 4px rgba(203, 213, 225, 0.15),
+        inset 0 2px 4px rgba(255, 255, 255, 0.9);
+    }
+
+    .balance-box span { 
+      font-size: 10px; 
+      color: #64748b; 
+      display: block; 
+      margin-bottom: 2px; 
+      font-weight: 700;
+    }
+
+    .balance-box strong { 
+      font-size: 13px; 
+      font-weight: 900;
+    }
+
+    .total-wealth-box { 
+      background: #38bdf8; 
+      border-radius: 24px; 
+      padding: 14px 18px; 
+      color: #0c4a6e; 
+      margin-bottom: 12px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      box-shadow: 
+        0 14px 26px rgba(56, 189, 248, 0.35),
+        inset 0 -6px 12px rgba(2, 132, 199, 0.25),
+        inset 0 6px 12px rgba(255, 255, 255, 0.7);
+    }
 
     /* الرسوم البيانية */
-    .chart-container { background: #0b1120; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-top: 10px; }
-    .chart-title { font-size: 12px; color: #94a3b8; margin-bottom: 8px; font-weight: bold; }
+    .chart-container { 
+      background: #f8fafc; 
+      border-radius: 22px; 
+      padding: 14px; 
+      margin-top: 14px; 
+      box-shadow: 
+        0 8px 16px rgba(148, 163, 184, 0.1),
+        inset 0 -4px 8px rgba(203, 213, 225, 0.2),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
+    }
+
+    .chart-title { 
+      font-size: 12px; 
+      color: #475569; 
+      margin-bottom: 8px; 
+      font-weight: 800; 
+    }
+
     svg { display: block; width: 100%; height: 110px; }
 
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; padding: 15px; z-index: 100; }
-    .modal-content { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; width: 100%; max-width: 360px; }
-    .modal-option { display: flex; align-items: center; gap: 10px; background: #0b1120; border: 1px solid #334155; padding: 10px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
-    .modal-option input { width: 18px; height: 18px; margin: 0; accent-color: #38bdf8; }
+    /* Modal الطيني */
+    .modal-overlay { 
+      position: fixed; 
+      inset: 0; 
+      background: rgba(15, 23, 42, 0.4); 
+      backdrop-filter: blur(4px); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 16px; 
+      z-index: 100; 
+    }
+
+    .modal-content { 
+      background: #ffffff; 
+      border-radius: 28px; 
+      padding: 22px; 
+      width: 100%; 
+      max-width: 380px; 
+      box-shadow: 
+        0 24px 48px rgba(15, 23, 42, 0.25),
+        inset 0 -8px 16px rgba(148, 163, 184, 0.25),
+        inset 0 8px 16px rgba(255, 255, 255, 0.95);
+    }
+
+    .modal-option { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      background: #f8fafc; 
+      padding: 12px 14px; 
+      border-radius: 20px; 
+      margin-bottom: 10px; 
+      cursor: pointer; 
+      box-shadow: 
+        0 4px 10px rgba(148, 163, 184, 0.1),
+        inset 0 -3px 6px rgba(203, 213, 225, 0.2),
+        inset 0 3px 6px rgba(255, 255, 255, 0.9);
+    }
+
+    .modal-option input { 
+      width: 20px; 
+      height: 20px; 
+      margin: 0; 
+      accent-color: #0284c7; 
+    }
 
     .hidden { display: none; }
   </style>
@@ -96,7 +601,8 @@
 
   <div class="container">
     
-    <header>
+    <!-- Header Clay Card -->
+    <header class="clay-card">
       <div id="liveClock" class="clock">12:00:00</div>
       <div id="liveDate" class="date-str">جارٍ التحميل...</div>
       
@@ -106,6 +612,7 @@
       </div>
     </header>
 
+    <!-- Navigation Tabs -->
     <div class="nav-tabs">
       <button class="active" onclick="switchTab('prayers', this)">الصلوات</button>
       <button onclick="switchTab('azkar', this)">الأذكار</button>
@@ -114,22 +621,22 @@
     </div>
 
     <!-- 1. الصلوات -->
-    <div id="tab-prayers" class="card">
+    <div id="tab-prayers" class="clay-card">
       <div class="card-title">
         <span>صلوات اليوم</span>
-        <span id="prayerProgress" style="color: #38bdf8;">0 / 5</span>
+        <span id="prayerProgress" style="color: #0284c7;">0 / 5</span>
       </div>
 
-      <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 10px;">
-        <span style="font-size: 11px; color: #94a3b8;">عرض يوم:</span>
-        <input type="date" id="prayerArchiveDate" onchange="loadPrayersForDate(this.value)" style="margin: 0; padding: 6px 10px;">
+      <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+        <span style="font-size: 12px; color: #475569; font-weight: 800;">عرض يوم:</span>
+        <input type="date" id="prayerArchiveDate" onchange="loadPrayersForDate(this.value)" style="margin: 0; padding: 8px 12px;">
       </div>
 
       <div id="prayersList"></div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; background:#0b1120; padding:8px 12px; border-radius:10px; border:1px solid #334155; margin-top:8px; font-size:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px 14px; border-radius:18px; margin-top:10px; font-size:12px; font-weight:700;">
         <span>تنبيه قبل الصلاة بـ:</span>
-        <select id="prayerAlertOffset" onchange="saveAlertOffset(this.value)" style="width:110px; margin:0; padding:4px 8px;">
+        <select id="prayerAlertOffset" onchange="saveAlertOffset(this.value)" style="width:110px; margin:0; padding:6px 10px;">
           <option value="5">5 دقائق</option>
           <option value="10" selected>10 دقائق</option>
           <option value="15">15 دقيقة</option>
@@ -138,77 +645,77 @@
       </div>
 
       <div class="extra-prayers">
-        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-          <input type="checkbox" id="chkSunnah" onchange="toggleExtra('sunnah')" style="width:16px; height:16px; margin:0; accent-color:#38bdf8;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="chkSunnah" onchange="toggleExtra('sunnah')" style="width:18px; height:18px; margin:0; accent-color:#0284c7;">
           سنن الرواتب
         </label>
-        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-          <input type="checkbox" id="chkDuha" onchange="toggleExtra('duha')" style="width:16px; height:16px; margin:0; accent-color:#38bdf8;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="chkDuha" onchange="toggleExtra('duha')" style="width:18px; height:18px; margin:0; accent-color:#0284c7;">
           صلاة الضحى
         </label>
-        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-          <input type="checkbox" id="chkWitr" onchange="toggleExtra('witr')" style="width:16px; height:16px; margin:0; accent-color:#38bdf8;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="chkWitr" onchange="toggleExtra('witr')" style="width:18px; height:18px; margin:0; accent-color:#0284c7;">
           قيام الليل / الوتر
         </label>
       </div>
 
       <div class="qada-box">
         <div>
-          <span style="font-size:12px; font-weight:bold; display:block;">صلوات بذمتي (قضاء):</span>
-          <span style="font-size:10px; color:#94a3b8;">اضغط بعد كل قضاء لتحديث العداد</span>
+          <span style="font-size:13px; font-weight:900; color:#991b1b; display:block;">صلوات بذمتي (قضاء):</span>
+          <span style="font-size:11px; color:#b91c1c; font-weight:700;">اضغط بعد كل قضاء لتحديث العداد</span>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
           <button class="counter-btn" onclick="updateQada(-1)">-</button>
-          <span id="qadaCount" style="font-weight:bold; font-size:15px; color:#f87171;">0</span>
+          <span id="qadaCount" style="font-weight:900; font-size:16px; color:#991b1b;">0</span>
           <button class="counter-btn" onclick="updateQada(1)">+</button>
         </div>
       </div>
 
       <div class="chart-container">
-        <div class="chart-title">📊 نسبة الالتزام بالصلوات آخر 30 يوماً (<span id="prayerCommitRate">0%</span>)</div>
+        <div class="chart-title">📊 نسبة الالتزام بالصلوات آخر 30 يوماً (<span id="prayerCommitRate" style="color:#0284c7;">0%</span>)</div>
         <svg id="prayerChartSvg" viewBox="0 0 300 80"></svg>
       </div>
     </div>
 
     <!-- 2. الأذكار -->
-    <div id="tab-azkar" class="card hidden">
+    <div id="tab-azkar" class="clay-card hidden">
       <div class="azkar-header">
-        <span id="azkarModeTitle" style="font-weight: bold; color: #38bdf8;">أذكار الصباح</span>
+        <span id="azkarModeTitle" style="font-weight: 900; color: #0284c7; font-size: 15px;">أذكار الصباح</span>
         <div class="azkar-switch">
           <button id="btnAzkarSabah" onclick="setAzkarMode('sabah')">الصباح</button>
           <button id="btnAzkarMasa" onclick="setAzkarMode('masa')">المساء</button>
         </div>
       </div>
-      <div class="item-list" id="azkarContainer" style="max-height: 380px;"></div>
+      <div class="item-list" id="azkarContainer" style="max-height: 400px;"></div>
     </div>
 
     <!-- 3. المهام -->
     <div id="tab-tasks" class="hidden">
-      <div class="card">
+      <div class="clay-card">
         <form onsubmit="addTask(event)">
           <input type="text" id="taskInput" placeholder="اكتب المهمة هنا..." required>
-          <div style="display: flex; gap: 6px;">
+          <div style="display: flex; gap: 8px;">
             <select id="taskDayChoice" onchange="toggleCustomDate(this.value)">
               <option value="today">مهمة اليوم</option>
               <option value="tomorrow">مهمة غداً</option>
               <option value="custom">تاريخ مخصص...</option>
             </select>
             <input type="date" id="taskCustomDate" class="hidden">
-            <select id="taskPriority" style="width: 120px;">
+            <select id="taskPriority" style="width: 130px;">
               <option value="high">أولوية: عاجلة ⚡</option>
               <option value="med" selected>أولوية: مهمة ⭐</option>
               <option value="low">أولوية: عادية 🔹</option>
             </select>
           </div>
-          <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
-            <span style="font-size: 11px; color: #94a3b8; white-space: nowrap;">⏰ إشعار تنبيه:</span>
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 12px; color: #475569; font-weight: 800; white-space: nowrap;">⏰ إشعار تنبيه:</span>
             <input type="time" id="taskAlertTime" style="margin: 0;">
           </div>
           <button type="submit" class="btn-submit">+ حفظ المهمة</button>
         </form>
       </div>
 
-      <div class="card">
+      <div class="clay-card">
         <div class="filter-tabs">
           <button class="active" onclick="filterTasks('all', this)">الكل (مرتبة)</button>
           <button onclick="filterTasks('today', this)">اليوم</button>
@@ -222,50 +729,50 @@
 
     <!-- 4. المالية -->
     <div id="tab-finance" class="hidden">
-      <div class="card">
+      <div class="clay-card">
         
         <div class="total-wealth-box">
           <div>
-            <span style="font-size: 11px; opacity: 0.9; display: block;">إجمالي الميزانية التقديرية (ل.س):</span>
-            <strong id="totalEstimatedWealth" style="font-size: 18px;">0 ل.س</strong>
+            <span style="font-size: 11px; font-weight: 800; opacity: 0.9; display: block;">إجمالي الميزانية التقديرية (ل.س):</span>
+            <strong id="totalEstimatedWealth" style="font-size: 19px; font-weight: 900;">0 ل.س</strong>
           </div>
           <div style="text-align: left;">
-            <span style="font-size: 10px; opacity: 0.85; display: block;">سعر الصرف ($):</span>
-            <input type="number" id="usdExchangeRate" oninput="updateExchangeRate(this.value)" placeholder="15000" style="width: 95px; margin: 0; padding: 4px 8px; font-size: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); text-align: center; color: #fff; font-weight: bold;">
+            <span style="font-size: 11px; font-weight: 800; opacity: 0.9; display: block;">سعر الصرف ($):</span>
+            <input type="number" id="usdExchangeRate" oninput="updateExchangeRate(this.value)" placeholder="15000" style="width: 105px; margin: 0; padding: 6px 10px; font-size: 13px; background: rgba(255,255,255,0.7); border: none; text-align: center; color: #0c4a6e; font-weight: 900; border-radius: 16px;">
           </div>
         </div>
 
-        <div class="finance-card">
+        <div class="finance-subcard">
           <div class="currency-title">🇸🇾 الليرة السورية (ل.س)</div>
           <div class="balance-grid">
-            <div class="balance-box"><span>المكتسب</span><strong id="sypIncome" style="color: #34d399;">0</strong></div>
-            <div class="balance-box"><span>المدفوع</span><strong id="sypExpense" style="color: #f87171;">0</strong></div>
-            <div class="balance-box"><span>الصافي</span><strong id="sypNet" style="color: #38bdf8;">0</strong></div>
+            <div class="balance-box"><span>المكتسب</span><strong id="sypIncome" style="color: #15803d;">0</strong></div>
+            <div class="balance-box"><span>المدفوع</span><strong id="sypExpense" style="color: #b91c1c;">0</strong></div>
+            <div class="balance-box"><span>الصافي</span><strong id="sypNet" style="color: #0369a1;">0</strong></div>
           </div>
         </div>
 
-        <div class="finance-card">
+        <div class="finance-subcard">
           <div class="currency-title">💵 الدولار الأمريكي ($)</div>
           <div class="balance-grid">
-            <div class="balance-box"><span>المكتسب</span><strong id="usdIncome" style="color: #34d399;">0</strong></div>
-            <div class="balance-box"><span>المدفوع</span><strong id="usdExpense" style="color: #f87171;">0</strong></div>
-            <div class="balance-box"><span>الصافي</span><strong id="usdNet" style="color: #38bdf8;">0</strong></div>
+            <div class="balance-box"><span>المكتسب</span><strong id="usdIncome" style="color: #15803d;">0</strong></div>
+            <div class="balance-box"><span>المدفوع</span><strong id="usdExpense" style="color: #b91c1c;">0</strong></div>
+            <div class="balance-box"><span>الصافي</span><strong id="usdNet" style="color: #0369a1;">0</strong></div>
           </div>
         </div>
 
         <form onsubmit="addTransaction(event)">
-          <div style="display: flex; gap: 6px;">
+          <div style="display: flex; gap: 8px;">
             <select id="finType" style="flex: 1;" onchange="toggleCategorySelect(this.value)">
               <option value="expense">مصروف (مدفوع)</option>
               <option value="income">دخل (مكتسب)</option>
             </select>
-            <select id="finCurrency" style="width: 110px;">
+            <select id="finCurrency" style="width: 120px;">
               <option value="SYP">ل.س (سوري)</option>
               <option value="USD">$ (دولار)</option>
             </select>
           </div>
 
-          <div style="display: flex; gap: 6px;">
+          <div style="display: flex; gap: 8px;">
             <select id="finCategory" style="flex: 1;">
               <option value="طعام ومشتريات">طعام ومشتريات</option>
               <option value="فواتير وكهرباء">فواتير وكهرباء</option>
@@ -288,18 +795,18 @@
 
       </div>
 
-      <div class="card">
+      <div class="clay-card">
         <div class="card-title">السجل المالي الأخير</div>
         <div class="item-list" id="transactionsList"></div>
       </div>
     </div>
 
-    <!-- أزرار التصدير -->
-    <div style="display:flex; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap;">
-      <button onclick="requestNotificationPermission()" class="btn-action" style="background:#1e293b; border:1px solid #334155; padding:8px 14px; border-radius:10px;">
+    <!-- أزرار التصدير والإشعارات الطينية -->
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:16px; flex-wrap:wrap;">
+      <button onclick="requestNotificationPermission()" class="btn-action" style="padding:10px 18px; font-size:13px; border-radius:18px;">
         🔔 تفعيل التنبيهات
       </button>
-      <button onclick="openExportModal()" style="background:#10b981; border:none; color:#fff; padding:10px 18px; border-radius:10px; font-weight:bold; cursor:pointer;">
+      <button onclick="openExportModal()" class="btn-submit" style="width:auto; padding:10px 22px; background:#10b981; border-radius:18px; box-shadow:0 10px 20px rgba(16,185,129,0.3), inset 0 -4px 8px rgba(5,150,105,0.4), inset 0 4px 8px rgba(255,255,255,0.6);">
         📊 تصدير Excel مخصص
       </button>
     </div>
@@ -309,26 +816,26 @@
   <!-- Modal التصدير -->
   <div id="exportModal" class="modal-overlay hidden">
     <div class="modal-content">
-      <h3 style="font-size: 15px; margin-bottom: 14px; color: #38bdf8; text-align: center;">اختر ما ترغب بتصديره إلى Excel:</h3>
+      <h3 style="font-size: 16px; margin-bottom: 16px; color: #0284c7; text-align: center; font-weight: 900;">اختر ما ترغب بتصديره إلى Excel:</h3>
       
       <div class="modal-option">
         <input type="checkbox" id="chkExpTasks" checked>
-        <label for="chkExpTasks">المهام (المطلوبة والمؤجلة مع الأولويات)</label>
+        <label for="chkExpTasks" style="font-weight: 800; font-size: 13px;">المهام (المطلوبة والمؤجلة مع الأولويات)</label>
       </div>
 
       <div class="modal-option">
         <input type="checkbox" id="chkExpPrayers" checked>
-        <label for="chkExpPrayers">الصلوات (مع إجمالي المصلاة والفائتة)</label>
+        <label for="chkExpPrayers" style="font-weight: 800; font-size: 13px;">الصلوات (مع إجمالي المصلاة والفائتة)</label>
       </div>
 
       <div class="modal-option">
         <input type="checkbox" id="chkExpFinance" checked>
-        <label for="chkExpFinance">المالية (مع الفئات وإجمالي المكتسب والمدفوع)</label>
+        <label for="chkExpFinance" style="font-weight: 800; font-size: 13px;">المالية (مع الفئات وإجمالي المكتسب والمدفوع)</label>
       </div>
 
-      <div style="display: flex; gap: 8px; margin-top: 15px;">
+      <div style="display: flex; gap: 10px; margin-top: 18px;">
         <button onclick="executeSelectedExport()" class="btn-submit" style="background: #10b981;">تصدير الآن</button>
-        <button onclick="closeExportModal()" class="btn-submit" style="background: #334155; width: 80px;">إلغاء</button>
+        <button onclick="closeExportModal()" class="btn-submit" style="background: #64748b; width: 90px;">إلغاء</button>
       </div>
     </div>
   </div>
@@ -388,27 +895,22 @@
       const diffMin = diff % 60;
       document.getElementById('nextPrayerName').innerText = nextP;
       document.getElementById('nextPrayerTimer').innerText = `${diffH} س و ${diffMin} د`;
-
-      if (now.getSeconds() === 0) {
-        checkAutomatedNotifications(now, curM, pOrder);
-      }
     }
 
     setInterval(updateClockAndCountdown, 1000);
 
-        // 3. إدارة التخزين الذكية (استرجاع كل البيانات القديمة تلقائياً)
-    const oldKeys = ['my_life_tracker_v9', 'my_life_tracker_v8', 'my_life_tracker_v7', 'my_life_tracker_v6', 'my_life_tracker_v5', 'my_life_tracker_v4', 'my_life_tracker_v3'];
+    // 3. إدارة التخزين الذكية ودمج السجلات السابقة تلقائياً
+    const possibleKeys = ['my_life_tracker_master', 'my_life_tracker_v9', 'my_life_tracker_v8', 'my_life_tracker_v7', 'my_life_tracker_v6', 'my_life_tracker_v5', 'my_life_tracker_v4', 'my_life_tracker_v3'];
     let loadedData = null;
 
-    for (let k of oldKeys) {
-      const saved = localStorage.getItem(k);
-      if (saved) {
+    for (let k of possibleKeys) {
+      const item = localStorage.getItem(k);
+      if (item) {
         try {
-          const parsed = JSON.parse(saved);
+          const parsed = JSON.parse(item);
           if (!loadedData) {
             loadedData = parsed;
           } else {
-            // دمج المهام والمالية من أي نسخة سابقة
             if (parsed.tasks && parsed.tasks.length) {
               parsed.tasks.forEach(ot => {
                 if (!loadedData.tasks.some(t => t.id === ot.id || t.text === ot.text)) {
@@ -443,16 +945,9 @@
       azkar: {}
     };
 
-    // تثبيت مفتاح موحد دائم للأبد
-    function save() {
-      localStorage.setItem('my_life_tracker_master', JSON.stringify(appData));
-    }
-
-
-    // إعادة ضبط الأذكار إذا بدأ يوم جديد
     if (appData.lastActiveDate !== todayDateStr) {
       appData.lastActiveDate = todayDateStr;
-      appData.azkar = {}; // تصفير عدادات الأذكار لليوم الجديد
+      appData.azkar = {};
       save();
     }
 
@@ -465,7 +960,7 @@
     }
 
     function save() {
-      localStorage.setItem('my_life_tracker_v9', JSON.stringify(appData));
+      localStorage.setItem('my_life_tracker_master', JSON.stringify(appData));
     }
 
     function switchTab(id, btn) {
@@ -477,7 +972,7 @@
       if (id === 'finance') renderFinanceChart();
     }
 
-    // 4. الصلوات والسنن والأرشيف
+    // 4. الصلوات والسنن
     function loadPrayersForDate(dateStr) {
       if (!dateStr) return;
       selectedPrayerDate = dateStr;
@@ -500,13 +995,13 @@
         if (isDone) done++;
         el.innerHTML += `
           <div class="prayer-row ${isDone ? 'done' : ''}">
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="togglePrayer('${k}')" style="width:18px; height:18px; margin:0; accent-color:#10b981; cursor:pointer;">
-              <span style="font-weight:500;">${damascusTimes[k].name}</span>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="togglePrayer('${k}')" style="width:20px; height:20px; margin:0; accent-color:#16a34a; cursor:pointer;">
+              <span style="font-weight:800; font-size:14px;">${damascusTimes[k].name}</span>
             </label>
             <div style="display:flex; align-items:center; gap:10px;">
               <span class="prayer-time">${damascusTimes[k].display}</span>
-              <span style="font-size: 11px; color: ${isDone ? '#34d399' : '#64748b'}">${isDone ? 'تمت' : 'لم تُصلَّ'}</span>
+              <span style="font-size: 12px; font-weight:800; color: ${isDone ? '#16a34a' : '#64748b'}">${isDone ? 'تمت' : 'لم تُصلَّ'}</span>
             </div>
           </div>`;
       });
@@ -572,12 +1067,12 @@
         const height = (count / 5) * 60;
         const x = idx * (barWidth + gap) + 5;
         const y = 70 - height;
-        const color = count === 5 ? '#10b981' : count >= 3 ? '#38bdf8' : count > 0 ? '#f59e0b' : '#334155';
-        svg.innerHTML += `<rect x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="2" fill="${color}"><title>${count} / 5</title></rect>`;
+        const color = count === 5 ? '#10b981' : count >= 3 ? '#38bdf8' : count > 0 ? '#f59e0b' : '#cbd5e1';
+        svg.innerHTML += `<rect x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="3" fill="${color}"><title>${count} / 5</title></rect>`;
       });
     }
 
-    // 5. الأذكار (الصباح يبدأ من منتصف الليل 00:00 وحتى العصر 15:48)
+    // 5. الأذكار
     const azkarSabah = [
       { id: 's1', text: 'أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لا إِلَهَ إِلاَّ اللَّهُ.', count: 1 },
       { id: 's2', text: 'اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ.', count: 1 },
@@ -591,7 +1086,6 @@
       { id: 'm4', text: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (مئة مرة)', count: 100 }
     ];
 
-    // التبديل التلقائي الدقيق: من 00:00 حتى 15:48 صباحاً، وبعدها مساءً
     const currentHour = new Date().getHours();
     let azkarMode = (currentHour < 16) ? 'sabah' : 'masa';
 
@@ -625,7 +1119,7 @@
       if (cur > 0) { appData.azkar[id] = cur - 1; save(); renderAzkar(); }
     }
 
-    // 6. المهام (الترتيب الذكي الدقيق: غير المنجزة أولاً حسب التاريخ والأولوية، والمنجزة في الأسفل)
+    // 6. المهام (الترتيب الذكي مع دعم Claymorphism)
     function toggleCustomDate(v) {
       const el = document.getElementById('taskCustomDate');
       if (v === 'custom') { el.classList.remove('hidden'); el.value = todayDateStr; el.required = true; }
@@ -650,36 +1144,18 @@
 
       const pWeight = { high: 3, med: 2, low: 1 };
 
-      // الفرز الذكي الدقيق:
-      // 1. المهام غير المنجزة تظهر قبل المنجزة دائماً
-      // 2. غير المنجزة: ترتب زمنياً (تاريخ أقرب أولاً)
-      // 3. في نفس التاريخ: الأولوية الأعلى تسبق (high ثم med ثم low)
       const sorted = [...appData.tasks].sort((a, b) => {
         const aCompleted = (a.status === 'completed');
         const bCompleted = (b.status === 'completed');
 
-        // إذا أحدهما منجز والآخر غير منجز: غير المنجز في الأعلى
-        if (aCompleted !== bCompleted) {
-          return aCompleted ? 1 : -1;
-        }
+        if (aCompleted !== bCompleted) return aCompleted ? 1 : -1;
+        if (aCompleted && bCompleted) return b.id - a.id;
 
-        // إذا كان كلاهما منجزين: الأحدث إضافة أولاً
-        if (aCompleted && bCompleted) {
-          return b.id - a.id;
-        }
+        if (a.targetDate !== b.targetDate) return a.targetDate > b.targetDate ? 1 : -1;
 
-        // إذا كان كلاهما غير منجزين:
-        // أ. التاريخ الأقرب أولاً
-        if (a.targetDate !== b.targetDate) {
-          return a.targetDate > b.targetDate ? 1 : -1;
-        }
-
-        // ب. في نفس اليوم: الأولوية الأعلى أولاً (عاجلة ⚡ ثم مهمة ⭐ ثم عادية 🔹)
         const weightA = pWeight[a.priority || 'med'] || 2;
         const weightB = pWeight[b.priority || 'med'] || 2;
-        if (weightA !== weightB) {
-          return weightB - weightA;
-        }
+        if (weightA !== weightB) return weightB - weightA;
 
         return b.id - a.id;
       });
@@ -692,7 +1168,7 @@
       });
 
       if (filtered.length === 0) {
-        el.innerHTML = '<div style="text-align:center; color:#64748b; font-size:12px; padding:15px;">لا توجد مهام هنا</div>';
+        el.innerHTML = '<div style="text-align:center; color:#64748b; font-size:13px; font-weight:700; padding:18px;">لا توجد مهام هنا</div>';
         return;
       }
 
@@ -710,21 +1186,21 @@
         el.innerHTML += `
           <div class="list-row ${isDone ? 'is-completed' : priorityMap[t.priority || 'med']}">
             <div>
-              <div style="${isDone ? 'text-decoration:line-through; color:#64748b;' : 'font-weight:500;'}">
+              <div style="${isDone ? 'text-decoration:line-through; color:#94a3b8;' : 'font-weight:800; color:#0f172a;'}">
                 ${t.text}
-                ${t.alertTime ? `<span style="font-size:10px; color:#38bdf8; margin-right:4px;">⏰ ${t.alertTime}</span>` : ''}
+                ${t.alertTime ? `<span style="font-size:11px; color:#0284c7; margin-right:4px;">⏰ ${t.alertTime}</span>` : ''}
               </div>
-              <div style="margin-top:4px;">
+              <div style="margin-top:5px;">
                 <span class="date-badge">${dateLabel}</span>
                 <span class="badge badge-${t.status}">${statusMap[t.status]}</span>
-                <span style="font-size:10px; color:#94a3b8; margin-right:4px;">(${priorityLabel[t.priority || 'med']})</span>
+                <span style="font-size:11px; color:#64748b; font-weight:700; margin-right:4px;">(${priorityLabel[t.priority || 'med']})</span>
               </div>
             </div>
-            <div style="display:flex; align-items:center; gap:2px;">
-              ${!isDone ? `<button class="btn-action" title="إنجاز" onclick="setTaskStatus(${t.id}, 'completed')">✔</button>` : ''}
-              ${!isDone ? `<button class="btn-action" title="تأجيل للغد (+1 يوم)" onclick="postponeToTomorrow(${t.id})" style="color:#a855f7; font-weight:bold;">+1يوم</button>` : ''}
-              ${isDone ? `<button class="btn-action" title="إعادة للمطلوبة" onclick="setTaskStatus(${t.id}, 'pending')">↩</button>` : ''}
-              <button class="btn-action" title="حذف" onclick="deleteTask(${t.id})" style="color:#ef4444;">✕</button>
+            <div style="display:flex; align-items:center; gap:4px;">
+              ${!isDone ? `<button class="btn-action" title="إنجاز" onclick="setTaskStatus(${t.id}, 'completed')" style="color:#16a34a;">✔</button>` : ''}
+              ${!isDone ? `<button class="btn-action" title="تأجيل للغد (+1 يوم)" onclick="postponeToTomorrow(${t.id})" style="color:#7c3aed;">+1يوم</button>` : ''}
+              ${isDone ? `<button class="btn-action" title="إعادة للمطلوبة" onclick="setTaskStatus(${t.id}, 'pending')" style="color:#0284c7;">↩</button>` : ''}
+              <button class="btn-action" title="حذف" onclick="deleteTask(${t.id})" style="color:#e11d48;">✕</button>
             </div>
           </div>`;
       });
@@ -788,7 +1264,7 @@
       renderTasks();
     }
 
-    // 7. المالية وسعر الصرف
+    // 7. المالية وسعر الصرف المباشر
     function updateExchangeRate(val) {
       const rate = parseFloat(val);
       appData.usdRate = (!isNaN(rate) && rate > 0) ? rate : 0;
@@ -846,14 +1322,14 @@
         el.innerHTML += `
           <div class="list-row">
             <div>
-              <div style="font-weight:500;">${f.note} <span style="font-size:10px; background:#1e293b; padding:1px 6px; border-radius:5px; color:#38bdf8;">${f.category || 'عام'}</span></div>
-              <div style="font-size:10px; color:#64748b;">${f.date} | ${symbol}</div>
+              <div style="font-weight:800; color:#0f172a;">${f.note} <span style="font-size:10px; background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:10px;">${f.category || 'عام'}</span></div>
+              <div style="font-size:11px; color:#64748b; font-weight:700;">${f.date} | ${symbol}</div>
             </div>
             <div>
-              <span style="font-weight:bold; margin-left:8px; color:${f.type === 'income' ? '#34d399' : '#f87171'}">
+              <span style="font-weight:900; margin-left:8px; color:${f.type === 'income' ? '#15803d' : '#b91c1c'}">
                 ${f.type === 'income' ? '+' : '-'}${f.amount.toLocaleString()} ${symbol}
               </span>
-              <button class="btn-action" onclick="deleteFin(${realIdx})" style="color:#ef4444;">✕</button>
+              <button class="btn-action" onclick="deleteFin(${realIdx})" style="color:#e11d48;">✕</button>
             </div>
           </div>`;
       });
@@ -862,13 +1338,13 @@
       document.getElementById('sypExpense').innerText = sypExp.toLocaleString();
       const sypNet = sypInc - sypExp;
       document.getElementById('sypNet').innerText = sypNet.toLocaleString();
-      document.getElementById('sypNet').style.color = sypNet >= 0 ? '#38bdf8' : '#f87171';
+      document.getElementById('sypNet').style.color = sypNet >= 0 ? '#0369a1' : '#b91c1c';
 
       document.getElementById('usdIncome').innerText = usdInc.toLocaleString();
       document.getElementById('usdExpense').innerText = usdExp.toLocaleString();
       const usdNet = usdInc - usdExp;
       document.getElementById('usdNet').innerText = usdNet.toLocaleString();
-      document.getElementById('usdNet').style.color = usdNet >= 0 ? '#38bdf8' : '#f87171';
+      document.getElementById('usdNet').style.color = usdNet >= 0 ? '#0369a1' : '#b91c1c';
 
       document.getElementById('usdExchangeRate').value = appData.usdRate || 15000;
       calculateTotalWealth();
@@ -924,49 +1400,17 @@
         const x = idx * stepX + 10;
         const y = 80 - ((item.sum / maxExp) * 65);
         points += `${x},${y} `;
-        svg.innerHTML += `<circle cx="${x}" cy="${y}" r="2.5" fill="#f87171"><title>يوم ${item.day}: ${item.sum.toLocaleString()} ل.س</title></circle>`;
+        svg.innerHTML += `<circle cx="${x}" cy="${y}" r="3.5" fill="#f43f5e"><title>يوم ${item.day}: ${item.sum.toLocaleString()} ل.س</title></circle>`;
       });
 
-      svg.innerHTML = `<polyline fill="none" stroke="#f87171" stroke-width="2" points="${points}"/>` + svg.innerHTML;
+      svg.innerHTML = `<polyline fill="none" stroke="#f43f5e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${points}"/>` + svg.innerHTML;
     }
 
     // 8. التنبيهات
     function requestNotificationPermission() {
       if (!("Notification" in window)) { alert("المتصفح لا يدعم التنبيهات."); return; }
       Notification.requestPermission().then(p => {
-        if (p === 'granted') new Notification("مساعدي اليومي", { body: "تم تفعيل التنبيهات لشاشة القفل بنجاح!" });
-      });
-    }
-
-    function checkAutomatedNotifications(now, curM, pOrder) {
-      if (!("Notification" in window) || Notification.permission !== 'granted') return;
-
-      const offset = appData.prayerAlertOffset || 10;
-      pOrder.forEach(p => {
-        if (p.total - curM === offset) {
-          new Notification("تنبيه الصلاة 🕌", { body: `اقترب موعد أذان ${p.name} (متبقي ${offset} دقائق)` });
-        }
-      });
-
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      if (timeStr === "08:00") {
-        new Notification("أذكار الصباح ☀️", { body: "ابدأ يومك بذكر الله وتفقد أذكار الصباح" });
-      }
-      if (timeStr === "17:00") {
-        new Notification("أذكار المساء 🌙", { body: "حان الآن وقت أذكار المساء" });
-      }
-
-      if (timeStr === "21:00") {
-        const pendingCount = appData.tasks.filter(t => t.targetDate === todayDateStr && t.status !== 'completed').length;
-        if (pendingCount > 0) {
-          new Notification("تذكير المهام 📋", { body: `لديك ${pendingCount} مهام متبقية لليوم لم تُنجزها بعد!` });
-        }
-      }
-
-      appData.tasks.forEach(t => {
-        if (t.targetDate === todayDateStr && t.status !== 'completed' && t.alertTime === timeStr) {
-          new Notification("تذكير بمهمة ⏰", { body: t.text });
-        }
+        if (p === 'granted') new Notification("مساعدي اليومي", { body: "تم تفعيل التنبيهات بنجاح!" });
       });
     }
 
@@ -1097,7 +1541,7 @@
       a.click();
     }
 
-    // تشغيل أولي سريع وفوري
+    // تشغيل فوري وسلس
     updateClockAndCountdown();
     setAzkarMode(azkarMode);
     renderPrayers();
