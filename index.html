@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مساعدي اليومي - Bento Grid</title>
-  <meta name="theme-color" content="#090d16">
+  <title>مساعدي اليومي - الطراز الدمشقي</title>
+  <meta name="theme-color" content="#0d131f">
   <style>
     * {
       box-sizing: border-box;
@@ -13,16 +13,20 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", Tahoma, sans-serif;
     }
 
+    /* خلفية شامية بنمط هندسي تراثي ناعم */
     body {
-      background-color: #090d16;
-      color: #f1f5f9;
+      background-color: #0d131f;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.04) 0%, transparent 60%),
+        repeating-linear-gradient(45deg, rgba(217, 119, 6, 0.02) 0, rgba(217, 119, 6, 0.02) 1px, transparent 0, transparent 20px),
+        repeating-linear-gradient(-45deg, rgba(217, 119, 6, 0.02) 0, rgba(217, 119, 6, 0.02) 1px, transparent 0, transparent 20px);
+      color: #f8fafc;
       display: flex;
       justify-content: center;
-      padding: 20px 14px 40px;
+      padding: 18px 12px 36px;
       min-height: 100vh;
     }
 
-    /* الحاوية الكبرى على نمط Bento Grid موحد ومحكم */
     .bento-container {
       width: 100%;
       max-width: 900px;
@@ -31,48 +35,57 @@
       gap: 16px;
     }
 
-    /* كل قسم عبارة عن بلاطة (Bento Tile) لها نفس الاستدارة والخلفية */
+    /* بلاطات البينتو بزخارف وإطارات عجمية دمشقية */
     .bento-tile {
-      background: #131b2e;
-      border: 1px solid #1e293b;
-      border-radius: 24px;
+      background: #141b2b;
+      border: 1px solid #2b3952;
+      border-radius: 20px;
       padding: 20px;
       position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.5);
     }
 
-    /* أحجام الامتداد في الشبكة */
+    /* إطار شامي ذهبي دقيق على الأطراف */
+    .bento-tile::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border: 1px dashed rgba(217, 119, 6, 0.25);
+      border-radius: 17px;
+      pointer-events: none;
+    }
+
     .span-4 { grid-column: span 4; }
     .span-2 { grid-column: span 2; }
 
     @media (max-width: 768px) {
-      .bento-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .bento-container { grid-template-columns: repeat(2, 1fr); }
       .span-2 { grid-column: span 2; }
       .span-4 { grid-column: span 2; }
     }
 
-    /* العناوين والرموز */
+    /* العناوين بنقش المثلثات والمعينات الشامية */
     .tile-title {
       font-size: 14px;
       font-weight: 800;
-      color: #94a3b8;
+      color: #f59e0b;
       margin-bottom: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      letter-spacing: 0.3px;
     }
 
-    .tile-title b {
-      color: #38bdf8;
+    .tile-title span::before {
+      content: "❖ ";
+      color: #d97706;
+      font-size: 13px;
     }
 
-    /* بلاطة الوقت والترحيب (Hero Tile) */
+    /* لوحة الترحيب والمواقيت */
     .hero-tile {
-      background: linear-gradient(135deg, #131b2e 0%, #172554 100%);
-      border: 1px solid #1e3a8a;
+      background: linear-gradient(135deg, #182238 0%, #1e2b45 100%);
+      border: 1px solid #d97706;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -83,25 +96,25 @@
     .clock {
       font-size: 34px;
       font-weight: 900;
-      color: #38bdf8;
+      color: #fbbf24;
       font-variant-numeric: tabular-nums;
-      line-height: 1.1;
+      text-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
     }
 
     .date-str {
       font-size: 13px;
-      color: #94a3b8;
+      color: #cbd5e1;
       margin-top: 4px;
       font-weight: 600;
     }
 
     .prayer-pill {
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: rgba(217, 119, 6, 0.12);
+      border: 1px solid #d97706;
       padding: 10px 16px;
-      border-radius: 16px;
+      border-radius: 14px;
       font-size: 13px;
-      color: #7dd3fc;
+      color: #fde68a;
       font-weight: 700;
     }
 
@@ -109,9 +122,9 @@
     input, select {
       width: 100%;
       padding: 10px 12px;
-      background: #0b1120;
-      border: 1px solid #233148;
-      border-radius: 14px;
+      background: #0d131f;
+      border: 1px solid #2b3952;
+      border-radius: 12px;
       color: #f8fafc;
       font-size: 13px;
       outline: none;
@@ -119,37 +132,37 @@
     }
 
     input:focus, select:focus {
-      border-color: #38bdf8;
+      border-color: #d97706;
     }
 
     .btn-action {
-      background: #0284c7;
+      background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
       color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-weight: 700;
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 9px 14px;
+      font-weight: 800;
       font-size: 13px;
       cursor: pointer;
-      transition: opacity 0.15s;
+      transition: all 0.15s;
     }
-    .btn-action:hover { opacity: 0.9; }
+    .btn-action:hover { opacity: 0.92; }
 
-    /* الصلوات */
+    /* صفوف الصلوات */
     .prayer-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 10px 12px;
-      background: #0b1120;
-      border: 1px solid #1e293b;
-      border-radius: 14px;
+      background: #0d131f;
+      border: 1px solid #222d42;
+      border-radius: 12px;
       margin-bottom: 6px;
       font-size: 13px;
     }
     .prayer-row.done {
       border-color: #059669;
-      background: rgba(5, 150, 105, 0.1);
+      background: rgba(5, 150, 105, 0.12);
     }
     .prayer-row label {
       display: flex;
@@ -159,51 +172,52 @@
       font-weight: 700;
     }
 
-    /* الأذكار */
+    /* بطاقات الأذكار */
     .zekr-box {
-      background: #0b1120;
-      border: 1px solid #1e293b;
-      border-radius: 16px;
+      background: #0d131f;
+      border: 1px solid #222d42;
+      border-radius: 14px;
       padding: 12px;
       margin-bottom: 8px;
       cursor: pointer;
     }
     .zekr-box.done {
       border-color: #059669;
-      opacity: 0.6;
+      opacity: 0.55;
     }
     .zekr-counter {
-      background: #38bdf8;
-      color: #0b1120;
+      background: #d97706;
+      color: #ffffff;
       font-weight: 900;
       padding: 3px 10px;
-      border-radius: 12px;
+      border-radius: 10px;
       font-size: 12px;
     }
 
-    /* المهام */
+    /* المهام الشامية */
     .task-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 11px 12px;
-      background: #0b1120;
-      border: 1px solid #1e293b;
-      border-radius: 14px;
+      background: #0d131f;
+      border: 1px solid #222d42;
+      border-radius: 12px;
       margin-bottom: 8px;
       font-size: 13px;
     }
-    .task-row.priority-high { border-right: 4px solid #ef4444; }
-    .task-row.priority-med { border-right: 4px solid #f59e0b; }
-    .task-row.priority-low { border-right: 4px solid #38bdf8; }
-    .task-row.done { opacity: 0.5; text-decoration: line-through; }
+    .task-row.priority-high { border-right: 4px solid #dc2626; }
+    .task-row.priority-med { border-right: 4px solid #d97706; }
+    .task-row.priority-low { border-right: 4px solid #0284c7; }
+    .task-row.done { opacity: 0.45; text-decoration: line-through; }
 
     .tag-badge {
       font-size: 10px;
-      background: #1e293b;
-      color: #38bdf8;
-      padding: 2px 6px;
+      background: #182238;
+      color: #f59e0b;
+      padding: 2px 7px;
       border-radius: 6px;
+      border: 1px solid rgba(217, 119, 6, 0.3);
     }
 
     /* المالية */
@@ -215,9 +229,9 @@
       text-align: center;
     }
     .stat-card {
-      background: #0b1120;
-      border: 1px solid #1e293b;
-      border-radius: 14px;
+      background: #0d131f;
+      border: 1px solid #222d42;
+      border-radius: 12px;
       padding: 8px;
     }
     .stat-card span { font-size: 10px; color: #94a3b8; display: block; margin-bottom: 2px; }
@@ -227,7 +241,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.75);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -235,9 +249,9 @@
       z-index: 100;
     }
     .modal-box {
-      background: #131b2e;
-      border: 1px solid #1e293b;
-      border-radius: 24px;
+      background: #141b2b;
+      border: 1px solid #d97706;
+      border-radius: 20px;
       padding: 22px;
       width: 100%;
       max-width: 360px;
@@ -250,7 +264,7 @@
 
   <div class="bento-container">
     
-    <!-- 1. Hero Bento Tile: الوقت والتاريخ والصلاة القادمة -->
+    <!-- 1. اللوحة الرئيسية: التوقيت ومواقيت دمشق -->
     <div class="bento-tile hero-tile span-4">
       <div>
         <div id="liveClock" class="clock">--:--:--</div>
@@ -262,42 +276,42 @@
       </div>
     </div>
 
-    <!-- 2. Bento Tile: الصلوات والفوائت -->
+    <!-- 2. الصلوات وقضاء الفوائت -->
     <div class="bento-tile span-2">
       <div class="tile-title">
-        <span>الصلوات اليومية</span>
-        <b id="prayerProgress">0 / 5</b>
+        <span>الصلوات الخمس (دمشق)</span>
+        <b id="prayerProgress" style="color: #fbbf24;">0 / 5</b>
       </div>
       <div id="prayersList"></div>
       
-      <!-- قضاء الصلوات والسنن بداخل نفس البلاطة بانسجام -->
-      <div style="display:flex; justify-content:space-between; align-items:center; background:#0b1120; padding:8px 12px; border-radius:14px; margin-top:8px;">
-        <span style="font-size:12px; font-weight:700;">صلوات القضاء:</span>
+      <!-- قضاء الصلوات -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0d131f; border:1px solid #222d42; padding:8px 12px; border-radius:12px; margin-top:8px;">
+        <span style="font-size:12px; font-weight:700;">صلوات في الذمة (قضاء):</span>
         <div style="display:flex; gap:8px; align-items:center;">
-          <button onclick="updateQada(-1)" style="width:24px; height:24px; border:none; border-radius:8px; background:#1e293b; color:#fff; cursor:pointer;">-</button>
-          <span id="qadaCount" style="font-weight:900; color:#ef4444; font-size:14px;">0</span>
-          <button onclick="updateQada(1)" style="width:24px; height:24px; border:none; border-radius:8px; background:#1e293b; color:#fff; cursor:pointer;">+</button>
+          <button onclick="updateQada(-1)" style="width:26px; height:26px; border:none; border-radius:8px; background:#1e293b; color:#fff; cursor:pointer; font-weight:bold;">-</button>
+          <span id="qadaCount" style="font-weight:900; color:#ef4444; font-size:15px;">0</span>
+          <button onclick="updateQada(1)" style="width:26px; height:26px; border:none; border-radius:8px; background:#1e293b; color:#fff; cursor:pointer; font-weight:bold;">+</button>
         </div>
       </div>
     </div>
 
-    <!-- 3. Bento Tile: الأذكار اليومية -->
+    <!-- 3. الأذكار الدمشقية -->
     <div class="bento-tile span-2">
       <div class="tile-title">
         <span id="azkarModeTitle">أذكار الصباح</span>
         <div style="display:flex; gap:4px;">
-          <button id="btnAzkarSabah" onclick="setAzkarMode('sabah')" style="padding:4px 8px; font-size:11px; border-radius:8px; border:none; background:#0284c7; color:#fff; cursor:pointer;">الصباح</button>
-          <button id="btnAzkarMasa" onclick="setAzkarMode('masa')" style="padding:4px 8px; font-size:11px; border-radius:8px; border:none; background:#1e293b; color:#94a3b8; cursor:pointer;">المساء</button>
+          <button id="btnAzkarSabah" onclick="setAzkarMode('sabah')" style="padding:4px 8px; font-size:11px; border-radius:8px; border:none; background:#d97706; color:#fff; cursor:pointer; font-weight:bold;">الصباح</button>
+          <button id="btnAzkarMasa" onclick="setAzkarMode('masa')" style="padding:4px 8px; font-size:11px; border-radius:8px; border:none; background:#1e293b; color:#94a3b8; cursor:pointer; font-weight:bold;">المساء</button>
         </div>
       </div>
       <div id="azkarContainer" style="max-height: 290px; overflow-y: auto;"></div>
     </div>
 
-    <!-- 4. Bento Tile: المهام المرتبة بالأولويات والتأجيل السريع -->
+    <!-- 4. المهام والمرتبات -->
     <div class="bento-tile span-2">
       <div class="tile-title">
-        <span>المهام المطلوب إنجازها</span>
-        <span style="font-size:11px; color:#94a3b8;">اليوم ➔ غداً ➔ الأولوية</span>
+        <span>مهام اليوم والغد</span>
+        <span style="font-size:11px; color:#94a3b8;">الفرز بالأولوية</span>
       </div>
       <form onsubmit="addTask(event)" style="margin-bottom:12px;">
         <input type="text" id="taskInput" placeholder="أضف مهمة جديدة..." required>
@@ -317,37 +331,36 @@
       <div id="tasksList" style="max-height: 230px; overflow-y: auto;"></div>
     </div>
 
-    <!-- 5. Bento Tile: الإدارة المالية الشاملة وسعر الصرف -->
+    <!-- 5. الدفتر المالي وصرف الليرة والدولار -->
     <div class="bento-tile span-2">
       <div class="tile-title">
-        <span>المالية والميزانية</span>
+        <span>الدفتر المالي والعملات</span>
         <div style="display:flex; align-items:center; gap:4px;">
           <span style="font-size:10px; color:#94a3b8;">سعر $:</span>
           <input type="number" id="usdExchangeRate" oninput="updateExchangeRate(this.value)" placeholder="15000" style="width:75px; margin:0; padding:2px 6px; font-size:11px; text-align:center;">
         </div>
       </div>
 
-      <!-- إجمالي الميزانية بالليرة السورية -->
-      <div style="background:#0b1120; border:1px solid #1e293b; padding:10px 14px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <span style="font-size:12px; color:#94a3b8;">إجمالي الثروة التقديرية:</span>
-        <strong id="totalEstimatedWealth" style="color:#38bdf8; font-size:15px;">0 ل.س</strong>
+      <div style="background:#0d131f; border:1px solid #222d42; padding:10px 14px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:12px; color:#94a3b8;">الميزانية التقديرية:</span>
+        <strong id="totalEstimatedWealth" style="color:#fbbf24; font-size:15px;">0 ل.س</strong>
       </div>
 
-      <!-- إحصائيات السوري -->
+      <!-- ليرة سورية -->
       <div class="stat-grid">
         <div class="stat-card"><span>مكتسب (ل.س)</span><strong id="sypIncome" style="color:#34d399;">0</strong></div>
         <div class="stat-card"><span>مدفوع (ل.س)</span><strong id="sypExpense" style="color:#f87171;">0</strong></div>
-        <div class="stat-card"><span>الصافي (ل.س)</span><strong id="sypNet" style="color:#38bdf8;">0</strong></div>
+        <div class="stat-card"><span>الصافي (ل.س)</span><strong id="sypNet" style="color:#fbbf24;">0</strong></div>
       </div>
 
-      <!-- إحصائيات الدولار -->
+      <!-- دولار -->
       <div class="stat-grid">
         <div class="stat-card"><span>مكتسب ($)</span><strong id="usdIncome" style="color:#34d399;">0</strong></div>
         <div class="stat-card"><span>مدفوع ($)</span><strong id="usdExpense" style="color:#f87171;">0</strong></div>
-        <div class="stat-card"><span>الصافي ($)</span><strong id="usdNet" style="color:#38bdf8;">0</strong></div>
+        <div class="stat-card"><span>الصافي ($)</span><strong id="usdNet" style="color:#fbbf24;">0</strong></div>
       </div>
 
-      <!-- تسجيل حركة سريعة -->
+      <!-- حركة سريعة -->
       <form onsubmit="addTransaction(event)">
         <div style="display:flex; gap:6px;">
           <select id="finType" style="flex:1;">
@@ -361,18 +374,18 @@
           <input type="number" id="finAmount" step="any" placeholder="المبلغ" required style="width:100px;">
         </div>
         <div style="display:flex; gap:6px;">
-          <input type="text" id="finNote" placeholder="بيان الحركة..." required style="margin:0;">
+          <input type="text" id="finNote" placeholder="البيان (طعام، وقود...)" required style="margin:0;">
           <button type="submit" class="btn-action" style="white-space:nowrap;">تسجيل</button>
         </div>
       </form>
     </div>
 
-    <!-- 6. Bento Tile: شريط التحكم والتصدير المنسق لـ Excel -->
+    <!-- 6. اللوحة السفلية للتصدير المحكم -->
     <div class="bento-tile span-4" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding:14px 20px;">
-      <span style="font-size:13px; color:#94a3b8;">جميع بياناتك مخزنة محلياً على جهازك ومحمية بالكامل.</span>
+      <span style="font-size:13px; color:#94a3b8;">دمشق ❖ بياناتك محفوظة محلياً وفي أمان تام.</span>
       <div style="display:flex; gap:8px;">
-        <button onclick="requestNotificationPermission()" class="btn-action" style="background:#1e293b; color:#94a3b8;">🔔 تنبيهات</button>
-        <button onclick="openExportModal()" class="btn-action" style="background:#10b981;">📊 تصدير إلى Excel</button>
+        <button onclick="requestNotificationPermission()" class="btn-action" style="background:#182238; border:1px solid #2b3952; color:#94a3b8;">🔔 تنبيهات</button>
+        <button onclick="openExportModal()" class="btn-action" style="background: linear-gradient(180deg, #059669 0%, #047857 100%); border-color:#10b981;">📊 تصدير Excel</button>
       </div>
     </div>
 
@@ -381,32 +394,32 @@
   <!-- Modal التصدير -->
   <div id="exportModal" class="modal-overlay hidden">
     <div class="modal-box">
-      <h3 style="font-size: 15px; margin-bottom: 14px; color: #38bdf8; text-align: center;">حدد ما ترغب بتصديره إلى Excel:</h3>
+      <h3 style="font-size: 15px; margin-bottom: 14px; color: #f59e0b; text-align: center; font-weight: bold;">تصدير سجلاتك إلى ملف Excel:</h3>
       
       <label style="display:flex; gap:8px; margin-bottom:10px; font-size:13px; cursor:pointer;">
-        <input type="checkbox" id="chkExpTasks" checked style="width:18px; height:18px; margin:0;">
-        المهام غير المنجزة (المرتبة)
+        <input type="checkbox" id="chkExpTasks" checked style="width:18px; height:18px; margin:0; accent-color:#d97706;">
+        جدول المهام غير المنجزة (المرتبة)
       </label>
 
       <label style="display:flex; gap:8px; margin-bottom:10px; font-size:13px; cursor:pointer;">
-        <input type="checkbox" id="chkExpPrayers" checked style="width:18px; height:18px; margin:0;">
-        الصلوات (مع إجمالي المصلاة والفائتة)
+        <input type="checkbox" id="chkExpPrayers" checked style="width:18px; height:18px; margin:0; accent-color:#d97706;">
+        سجل الصلوات والالتزام
       </label>
 
       <label style="display:flex; gap:8px; margin-bottom:14px; font-size:13px; cursor:pointer;">
-        <input type="checkbox" id="chkExpFinance" checked style="width:18px; height:18px; margin:0;">
-        المالية (مع المجاميع وسعر الصرف)
+        <input type="checkbox" id="chkExpFinance" checked style="width:18px; height:18px; margin:0; accent-color:#d97706;">
+        الدفتر المالي وحسابات الصرف
       </label>
 
       <div style="display:flex; gap:8px;">
-        <button onclick="executeSelectedExport()" class="btn-action" style="background:#10b981; flex:1;">تصدير الآن</button>
-        <button onclick="closeExportModal()" class="btn-action" style="background:#1e293b; color:#94a3b8; width:80px;">إلغاء</button>
+        <button onclick="executeSelectedExport()" class="btn-action" style="background:#059669; flex:1; border-color:#10b981;">تصدير الآن</button>
+        <button onclick="closeExportModal()" class="btn-action" style="background:#1e293b; color:#94a3b8; width:80px; border-color:#2b3952;">إلغاء</button>
       </div>
     </div>
   </div>
 
   <script>
-    // مواقيت دمشق
+    // مواقيت دمشق المعتمدة
     const damascusTimes = {
       fajr: { name: 'الفجر', h: 5, m: 6, display: '05:06 ص' },
       dhuhr: { name: 'الظهر', h: 12, m: 25, display: '12:25 م' },
@@ -424,7 +437,6 @@
     }
     const todayDateStr = getStandardDate(new Date());
 
-    // تحديث الساعة والعد التنازلي
     function updateClockAndCountdown() {
       const now = new Date();
       document.getElementById('liveClock').innerText = now.toLocaleTimeString('ar-SY', { hour12: true });
@@ -452,7 +464,7 @@
     }
     setInterval(updateClockAndCountdown, 1000);
 
-    // إدارة التخزين واسترجاع كل النسخ القديمة للأبد
+    // استرجاع كل البيانات القديمة بأمان
     const possibleKeys = ['my_life_tracker_master', 'my_life_tracker_v9', 'my_life_tracker_v8', 'my_life_tracker_v7', 'my_life_tracker_v6', 'my_life_tracker_v5', 'my_life_tracker_v4', 'my_life_tracker_v3'];
     let loadedData = null;
 
@@ -509,7 +521,7 @@
         el.innerHTML += `
           <div class="prayer-row ${isDone ? 'done' : ''}">
             <label>
-              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="togglePrayer('${k}')" style="accent-color:#10b981; width:16px; height:16px; margin:0;">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="togglePrayer('${k}')" style="accent-color:#059669; width:16px; height:16px; margin:0;">
               <span>${damascusTimes[k].name}</span>
             </label>
             <span style="font-size:12px; color:#94a3b8;">${damascusTimes[k].display}</span>
@@ -549,8 +561,8 @@
     let azkarMode = (new Date().getHours() < 16) ? 'sabah' : 'masa';
     function setAzkarMode(mode) {
       azkarMode = mode;
-      document.getElementById('btnAzkarSabah').style.background = (mode === 'sabah') ? '#0284c7' : '#1e293b';
-      document.getElementById('btnAzkarMasa').style.background = (mode === 'masa') ? '#0284c7' : '#1e293b';
+      document.getElementById('btnAzkarSabah').style.background = (mode === 'sabah') ? '#d97706' : '#1e293b';
+      document.getElementById('btnAzkarMasa').style.background = (mode === 'masa') ? '#d97706' : '#1e293b';
       document.getElementById('azkarModeTitle').innerText = (mode === 'sabah') ? 'أذكار الصباح' : 'أذكار المساء';
       renderAzkar();
     }
@@ -595,7 +607,7 @@
       });
 
       if (sorted.length === 0) {
-        el.innerHTML = '<div style="text-align:center; color:#64748b; font-size:12px; padding:15px;">لا توجد مهام</div>';
+        el.innerHTML = '<div style="text-align:center; color:#64748b; font-size:12px; padding:15px;">لا توجد مهام حالياً</div>';
         return;
       }
 
@@ -610,9 +622,9 @@
               <div style="margin-top:3px;"><span class="tag-badge">${dLabel}</span></div>
             </div>
             <div style="display:flex; gap:3px;">
-              ${!isDone ? `<button onclick="setTaskStatus(${t.id}, 'completed')" style="border:none; background:none; cursor:pointer; color:#10b981;">✔</button>` : ''}
-              ${!isDone ? `<button onclick="postponeToTomorrow(${t.id})" style="border:none; background:none; cursor:pointer; color:#a855f7; font-weight:bold; font-size:11px;">+1يوم</button>` : ''}
-              ${isDone ? `<button onclick="setTaskStatus(${t.id}, 'pending')" style="border:none; background:none; cursor:pointer; color:#38bdf8;">↩</button>` : ''}
+              ${!isDone ? `<button onclick="setTaskStatus(${t.id}, 'completed')" style="border:none; background:none; cursor:pointer; color:#059669; font-weight:bold;">✔</button>` : ''}
+              ${!isDone ? `<button onclick="postponeToTomorrow(${t.id})" style="border:none; background:none; cursor:pointer; color:#f59e0b; font-weight:bold; font-size:11px;">+1يوم</button>` : ''}
+              ${isDone ? `<button onclick="setTaskStatus(${t.id}, 'pending')" style="border:none; background:none; cursor:pointer; color:#0284c7;">↩</button>` : ''}
               <button onclick="deleteTask(${t.id})" style="border:none; background:none; cursor:pointer; color:#ef4444;">✕</button>
             </div>
           </div>`;
@@ -659,7 +671,7 @@
       renderTasks();
     }
 
-    // المالية وسعر الصرف
+    // المالية
     function updateExchangeRate(val) {
       appData.usdRate = parseFloat(val) || 15000;
       save();
@@ -718,7 +730,7 @@
       document.getElementById('finNote').value = '';
     }
 
-    // Modal التصدير المنظم إلى Excel
+    // Modal التصدير
     function openExportModal() { document.getElementById('exportModal').classList.remove('hidden'); }
     function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
 
@@ -735,9 +747,9 @@
         <style>
           body { font-family: Tahoma, Arial; direction: rtl; }
           table { border-collapse: collapse; margin-bottom: 25px; width: 100%; }
-          th { background: #0284c7; color: #fff; padding: 10px; border: 1px solid #cbd5e1; }
+          th { background-color: #d97706; color: #fff; padding: 10px; border: 1px solid #cbd5e1; }
           td { border: 1px solid #cbd5e1; padding: 8px; text-align: center; }
-          .title-row { background: #0f172a; color: #38bdf8; font-weight: bold; padding: 12px; }
+          .title-row { background-color: #1e293b; color: #fbbf24; font-weight: bold; padding: 12px; }
         </style>
       </head>
       <body>`;
@@ -745,7 +757,7 @@
       if (expTasks) {
         const pMap = { high: 'عاجلة ⚡', med: 'مهمة ⭐', low: 'عادية 🔹' };
         const nonDone = appData.tasks.filter(t => t.status !== 'completed');
-        excelHTML += `<table><tr><td colspan="3" class="title-row">📌 جدول المهام</td></tr><tr><th>المهمة</th><th>الأولوية</th><th>الموعد</th></tr>`;
+        excelHTML += `<table><tr><td colspan="3" class="title-row">📌 جدول المهام المطلوب إنجازها</td></tr><tr><th>المهمة</th><th>الأولوية</th><th>الموعد</th></tr>`;
         nonDone.forEach(t => { excelHTML += `<tr><td>${t.text}</td><td>${pMap[t.priority || 'med']}</td><td>${t.targetDate}</td></tr>`; });
         excelHTML += `</table>`;
       }
@@ -772,7 +784,7 @@
       const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel;charset=utf-8' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `تقرير_${todayDateStr}.xls`;
+      a.download = `تقرير_دمشقي_${todayDateStr}.xls`;
       a.click();
     }
 
@@ -780,7 +792,7 @@
       if ("Notification" in window) Notification.requestPermission();
     }
 
-    // إقلاع فوري ونظيف
+    // إقلاع فوري
     updateClockAndCountdown();
     setAzkarMode(azkarMode);
     renderPrayers();
